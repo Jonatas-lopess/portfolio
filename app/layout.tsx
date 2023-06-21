@@ -15,9 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-br">
-      <body className={inter.className + " bg-gradient-to-b from-[#434343] to-[#000000]"}>
+      <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#ECE9E6]"}>
         <main className="flex flex-col h-full mx-4">
-          <div className="flex justify-between mt-2 space-x-8 text-white">
+          <div className="flex justify-between mt-2 space-x-8 dark:text-white">
             <div className="space-x-4">
               <a href="/">Home</a>
               <a href="/projects">Projects</a>

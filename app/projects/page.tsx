@@ -1,6 +1,6 @@
 export default function Projects() {
     return (
-        <div className="flex flex-1 text-white">
+        <div className="flex flex-1 dark:text-white">
             <div className="grid grid-cols-1 md:grid-cols-3 w-full mt-20">
                 <div className="w-full h-full space-y-10 capitalize">
                     <div className="flex justify-between border-b">
