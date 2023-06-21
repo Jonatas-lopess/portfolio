@@ -16,8 +16,8 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body className={inter.className + " bg-gradient-to-b from-[#434343] to-[#000000]"}>
-        <main className="flex flex-col h-full">
-          <div className="flex justify-between mx-4 mt-2 space-x-8 text-white">
+        <main className="flex flex-col h-full mx-4">
+          <div className="flex justify-between mt-2 space-x-8 text-white">
             <div className="space-x-4">
               <a href="/">Home</a>
               <a href="/projects">Projects</a>
