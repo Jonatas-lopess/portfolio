@@ -1,6 +1,6 @@
-import Download from "@/components/Download";
-import Github from "@/components/Github";
-import Linkedin from "@/components/Linkedin";
+import Download from "@/components/svg/Download";
+import Github from "@/components/svg/Github";
+import Linkedin from "@/components/svg/Linkedin";
 
 export default function Home() {
   const ICON_SIZE = 36

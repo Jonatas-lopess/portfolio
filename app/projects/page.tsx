@@ -3,7 +3,7 @@ export default function Projects() {
         <div className="flex flex-1 dark:text-white">
             <div className="grid grid-cols-1 md:grid-cols-3 w-full mt-20">
                 <div className="w-full h-full space-y-10 capitalize">
-                    <div className="flex justify-between border-b">
+                    <div className="flex justify-between border-b border-black dark:border-white">
                         <h1>Projects</h1>
                         <span>0</span>
                     </div>
