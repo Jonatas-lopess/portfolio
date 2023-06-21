@@ -4,7 +4,7 @@ export default function Home() {
   const ICON_SIZE = 36
 
   return (
-    <main className="flex flex-col h-screen bg-gradient-to-b from-[#434343] to-[#000000]">
+    <main className="flex flex-col h-full">
       <div className="flex justify-between mx-4 mt-2 space-x-8 text-white">
         <div className="space-x-4">
           <a href="/">Home</a>
