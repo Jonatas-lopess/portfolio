@@ -1,15 +1,11 @@
 'use client'
 
-import cidade from '@/public/cidade.jpg'
-import cachorro from '@/public/cachorro.webp'
-import Image, { StaticImageData } from 'next/image'
+import data from '@/data/data';
+import Image from 'next/image'
 import { MouseEvent } from 'react'
 
 export default function Projects() {
-    const projects: {name: string; image: StaticImageData}[] = [
-        {name: 'cachorro', image: cachorro},
-        {name: 'prédios', image: cidade}
-    ]
+    const projects = data;
 
     function listMouseOverBehavior(e: MouseEvent<HTMLLIElement>) {
         let textFromHoverElement = e.currentTarget.textContent?.toLowerCase();
