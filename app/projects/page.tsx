@@ -29,13 +29,13 @@ export default function Projects() {
         <div className="flex flex-1 dark:text-white">
             <div className="grid grid-cols-1 md:grid-cols-3 w-full mt-20 space-x-4">
                 <div className="w-full h-full space-y-10 capitalize">
-                    <div className="flex justify-between border-b border-black dark:border-white">
-                        <h1>Projects</h1>
+                    <div className="flex justify-between border-b border-black dark:border-white text-5xl">
+                        <h1 className='font-semibold'>Projects</h1>
                         <span>{projects.length}</span>
                     </div>
-                    <ul id="list-itens" className="space-y-2 text-black dark:text-white text-opacity-25 dark:text-opacity-25" >
+                    <ul id="list-itens" className="space-y-3 text-black dark:text-white text-opacity-25 dark:text-opacity-25 text-3xl" >
                         {
-                            projects.map((e, i) => <li key={`project_${i}`}  className='hover:text-black dark:hover:text-white hover:text-opacity-100 cursor-pointer' onMouseOver={listMouseOverBehavior} onMouseOut={listMouseOutBehavior}>{e.name}</li>)
+                            projects.map((e, i) => <li key={`project_${i}`}  className='hover:text-black dark:hover:text-white hover:text-opacity-100 hover:translate-x-3 duration-200 cursor-pointer' onMouseOver={listMouseOverBehavior} onMouseOut={listMouseOutBehavior}>{e.name}</li>)
                         }
                     </ul>
                 </div>
