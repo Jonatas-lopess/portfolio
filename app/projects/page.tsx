@@ -22,9 +22,8 @@ export default function Projects() {
     }
     
     return (
-        <div className="flex flex-1 dark:text-white">
-            <div className="grid grid-cols-1 md:grid-cols-3 w-full mt-20 space-x-4">
-                <div className="w-full h-full space-y-10 capitalize">
+            <div className="grid grid-cols-1 md:grid-cols-3 w-full h-full dark:text-white mt-20">
+                <div className="w-full space-y-10 capitalize">
                     <div className="flex justify-between border-b border-black dark:border-white text-5xl">
                         <h1 className='font-semibold'>Projects</h1>
                         <span>{projects.length}</span>
@@ -35,12 +34,11 @@ export default function Projects() {
                         }
                     </ul>
                 </div>
-                <div id="list-images" className="w-full col-span-2 relative invisible md:visible">
+                <div id="list-images" className="w-full col-span-2 relative invisible md:visible mx-2 mb-4">
                     {
-                        projects.map((e, i) => <Image key={`image_${i}`} alt={e.name} src={e.image} className='w-full h-full absolute object-fill opacity-0 transition-opacity duration-700 rounded-tl-lg' />)
+                        projects.map((e, i) => <Image key={`image_${i}`} alt={e.name} src={e.image} className='w-full max-h-full absolute object-fill opacity-0 transition-opacity duration-700 rounded' />)
                     }
                 </div>
             </div>
-        </div>
     )
 }
