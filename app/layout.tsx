@@ -19,12 +19,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const ICON_SIZE = 18
-  const [theme, setTheme] = useState(sessionStorage.theme === 'dark' || (!('theme' in sessionStorage)) && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : '')
-
-  useEffect(() => {
-    if(!('theme' in sessionStorage)) sessionStorage.setItem('theme', theme)
-    if(sessionStorage.theme !== theme) sessionStorage.theme = theme
-  }, [theme])
+  const [theme, setTheme] = useState('dark')
 
   return (
     <html lang="pt-br" className={theme}>
@@ -38,7 +33,7 @@ export default function RootLayout({
             </div>
             <div className="flex space-x-4 items-center">
               <span>PT</span>
-              <span onClick={() => setTheme(prev => (prev === 'dark' ? '' : 'dark'))} className='cursor-pointer h-min'>{
+              <span onClick={() => {}} className='cursor-pointer h-min'>{
                 theme === 'dark'
                   ? <Light height={ICON_SIZE} width={ICON_SIZE} className='dark:fill-white' />
                   : <Dark height={ICON_SIZE} width={ICON_SIZE} />

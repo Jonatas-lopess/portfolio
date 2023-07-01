@@ -1,20 +1,44 @@
-import data from "@/data/data"
-import Image from "next/image";
+'use client'
+
+import supabase from "@/app/api/db"
+import Image from "next/image"
+import { PostgrestError } from '@supabase/supabase-js'
+import { ProjectObject } from "@/@types/project_object"
+import { useEffect, useState } from "react"
+
 
 export default function ProjectName({ params }: { params: { projectName: string }}) {
-    const project = data.find(e => {return e.name === params.projectName});
+    const [project, setProject] = useState<ProjectObject>();
+    const [imageUrl, setImageUrl] = useState<string>("");
+
+    useEffect(() => {
+        async function getProject(): Promise<ProjectObject> {
+            const { data, error } = (await supabase.from('projects').select('*').eq('name', params.projectName));
+            
+            if(error) { throw error }
+            return data[0];
+        }
+
+        getProject()
+            .then(data => {
+                setProject(data)
+                if(!data.image_path) return
+                setImageUrl(supabase.storage.from('images').getPublicUrl(data.image_path).data.publicUrl)   
+            })
+            .catch((error: PostgrestError) => console.error(error.message, error.details));
+    }, [ params.projectName ])
 
     return project ? (
         <div className="grid grid-cols-1 md:grid-cols-3 w-full h-full mt-20">
             <div className="dark:text-white">
                 <h1 className="text-5xl font-semibold capitalize mb-7">{project.name}</h1>
                 <h2 className="text-3xl font-semibold mb-5">Resume</h2>
-                <p className="mb-7">{project.resume}</p>
+                <p className="mb-7">{project.description}</p>
                 <h2 className="text-3xl font-semibold mb-5">Project Stack</h2>
                 <p>{project.stack}</p>
             </div>
-            <div className="w-full col-span-2 relative mx-2 mb-4">
-                <Image alt={project.name} src={project.image} className='w-full absolute max-h-full rounded' />
+            <div className="w-full max-h-[50rem] col-span-2 relative mx-2 mb-4">
+                <Image alt={project.image_path ?? ""} src={imageUrl} fill className='absolute rounded' />
             </div>
         </div>
     ) : (
