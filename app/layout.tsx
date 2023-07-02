@@ -1,9 +1,6 @@
-'use client'
-
 import Light from '@/components/svg/Light'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import { useEffect, useState } from 'react'
 import Dark from '@/components/svg/Dark'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -19,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   const ICON_SIZE = 18
-  const [theme, setTheme] = useState('dark')
+  const theme = 'dark';
 
   return (
     <html lang="pt-br" className={theme}>
@@ -33,7 +30,7 @@ export default function RootLayout({
             </div>
             <div className="flex space-x-4 items-center">
               <span>PT</span>
-              <span onClick={() => {}} className='cursor-pointer h-min'>{
+              <span className='cursor-pointer h-min'>{
                 theme === 'dark'
                   ? <Light height={ICON_SIZE} width={ICON_SIZE} className='dark:fill-white' />
                   : <Dark height={ICON_SIZE} width={ICON_SIZE} />
