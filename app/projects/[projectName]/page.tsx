@@ -2,31 +2,21 @@
 
 import supabase from "@/app/api/db"
 import Image from "next/image"
-import { PostgrestError } from '@supabase/supabase-js'
+import { PostgrestSingleResponse } from '@supabase/supabase-js'
 import { ProjectObject } from "@/@types/project_object"
-import { useEffect, useState } from "react"
 
+async function getData(name: string) {
+    const { data, error }: PostgrestSingleResponse<ProjectObject[]> = await supabase.from('projects').select('*').eq('name', name)
+    if(error) { console.error(error.message, error.details) }
 
-export default function ProjectName({ params }: { params: { projectName: string }}) {
-    const [project, setProject] = useState<ProjectObject>();
-    const [imageUrl, setImageUrl] = useState<string>("");
+    const project = data && data[0]
+    const imageUrl = project ? supabase.storage.from('images').getPublicUrl(project.image_path ?? "").data.publicUrl : ""
 
-    useEffect(() => {
-        async function getProject(): Promise<ProjectObject> {
-            const { data, error } = (await supabase.from('projects').select('*').eq('name', params.projectName));
-            
-            if(error) { throw error }
-            return data[0];
-        }
+    return { project, imageUrl }
+}
 
-        getProject()
-            .then(data => {
-                setProject(data)
-                if(!data.image_path) return
-                setImageUrl(supabase.storage.from('images').getPublicUrl(data.image_path).data.publicUrl)   
-            })
-            .catch((error: PostgrestError) => console.error(error.message, error.details));
-    }, [ params.projectName ])
+export default async function ProjectName({ params }: { params: { projectName: string }}) {
+    const { project, imageUrl } = await getData(params.projectName);
 
     return project ? (
         <div className="grid flex-1 grid-cols-1 md:grid-cols-3 w-full h-full mt-20">
