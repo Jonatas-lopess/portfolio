@@ -1,49 +1,30 @@
 'use client'
 
 import Image from 'next/image'
-import { MouseEvent, useEffect, useState } from 'react'
+import { MouseEvent } from 'react'
 import supabase from '../api/db'
-import { PostgrestError } from '@supabase/supabase-js'
-import { StorageError } from '@supabase/storage-js'
 import { ProjectObject } from '@/@types/project_object'
 import { ImageObject } from '@/@types/image_object'
 
-export default function Projects() {
-    const [projects, setProjects] = useState<ProjectObject[]>([]);
-    const [images, setImages] = useState<ImageObject[]>([]);
+async function getData(): Promise<{ projects: ProjectObject[] | null, images: ImageObject[] }> {
+    const { data: projects, error: projectsError } = await supabase.from('projects').select('name, image_path').order('created_at', { ascending: false });
+    if(projectsError) { console.error(projectsError.message, projectsError.details) }
 
-    useEffect(() => {
-        async function getProjects(): Promise<ProjectObject[]> {
-            const { data, error } = await supabase.from('projects').select('name, image_path').order('created_at', { ascending: false });
-            
-            if(error) { throw error }
-            return data;
-        }
+    const { data: imagesList, error: imagesError } = await supabase.storage.from('images').list();
+    if(imagesError) { console.error(imagesError.name, imagesError.message) }
 
-        async function getImages() {
-            const { data, error } = await supabase.storage.from('images').list();
+    let images: ImageObject[] = []
 
-            if(error) { throw error }
-            return data;
-        }
+    imagesList?.map(e => images.push({
+        name: e.name, 
+        public_url: supabase.storage.from('images').getPublicUrl(e.name).data.publicUrl
+    }))
 
-        getProjects()
-            .then(data => setProjects(data))
-            .catch((error: PostgrestError) => console.error(error.message, error.details));
-        
-        getImages()
-            .then(data => {
-                let imageArray: ImageObject[] = []
+    return { images, projects }
+}
 
-                data.map(e => imageArray.push({
-                    name: e.name, 
-                    public_url: supabase.storage.from('images').getPublicUrl(e.name).data.publicUrl
-                }))
-
-                setImages(imageArray)
-            })
-            .catch((error: StorageError) => console.error(error.name, error.message));
-    }, [])
+export default async function Projects() {
+    const { projects, images } = await getData();
 
     function listMouseOverBehavior(e: MouseEvent<HTMLLIElement>) {
         let textFromHoverElement = e.currentTarget.textContent?.toLowerCase();
@@ -64,11 +45,11 @@ export default function Projects() {
                 <div className="w-full space-y-10 capitalize">
                     <div className="flex justify-between border-b border-black dark:border-white text-5xl">
                         <h1 className='font-semibold'>Projects</h1>
-                        <span>{projects.length}</span>
+                        <span>{projects ? projects.length : 0}</span>
                     </div>
                     <ul id="list-itens" className="space-y-3 text-black dark:text-white text-opacity-25 dark:text-opacity-25 text-3xl" >
                         {
-                            projects.map((e, i) => <li key={`project_${i}`}  className='hover:text-black dark:hover:text-white hover:text-opacity-100 hover:translate-x-3 duration-200 cursor-pointer' onMouseOver={listMouseOverBehavior} onMouseOut={listMouseOutBehavior}><a href={`/projects/${e.name}`}>{e.name}</a></li>)
+                            projects?.map((e, i) => <li key={`project_${i}`}  className='hover:text-black dark:hover:text-white hover:text-opacity-100 hover:translate-x-3 duration-200 cursor-pointer' onMouseOver={listMouseOverBehavior} onMouseOut={listMouseOutBehavior}><a href={`/projects/${e.name}`}>{e.name}</a></li>)
                         }
                     </ul>
                 </div>
