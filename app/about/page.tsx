@@ -6,7 +6,7 @@ export default function About() {
     const ICON_SIZE = 36
     
     return (
-        <div className="mt-20">
+        <div className="my-20">
             <h1 className="text-5xl dark:text-white font-semibold mb-7">About me</h1>
             <p className="dark:text-white mb-5">
                 Im a formed Computer technician and Full stack programmer, currently attending to Universidade de Vassouras seeking a degree in Software Engineering and have more than one year of experience in full stack and mobile development. <br />

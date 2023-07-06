@@ -60,7 +60,7 @@ export default function Projects() {
     }
     
     return (
-            <div className="grid grid-cols-1 md:grid-cols-3 w-full h-full dark:text-white mt-20">
+            <div className="grid flex-1 grid-cols-1 md:grid-cols-3 w-full dark:text-white mt-20">
                 <div className="w-full space-y-10 capitalize">
                     <div className="flex justify-between border-b border-black dark:border-white text-5xl">
                         <h1 className='font-semibold'>Projects</h1>
