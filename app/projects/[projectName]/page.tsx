@@ -29,13 +29,17 @@ export default function ProjectName({ params }: { params: { projectName: string 
     }, [ params.projectName ])
 
     return project ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 w-full h-full mt-20">
+        <div className="grid flex-1 grid-cols-1 md:grid-cols-3 w-full h-full mt-20">
             <div className="dark:text-white">
                 <h1 className="text-5xl font-semibold capitalize mb-7">{project.name}</h1>
                 <h2 className="text-3xl font-semibold mb-5">Resume</h2>
                 <p className="mb-7">{project.description}</p>
                 <h2 className="text-3xl font-semibold mb-5">Project Stack</h2>
                 <p>{project.stack}</p>
+                <div className="flex flex-wrap justify-around">
+                    <a href="http://" className="bg-[#4078c0] py-3 px-12 mt-6 rounded">Code</a>
+                    <a href="http://" className="bg-[#bd2c00] py-3 px-12 mt-6 rounded">Prototype</a>
+                </div>
             </div>
             <div className="w-full max-h-[50rem] col-span-2 relative mx-2 mb-4">
                 <Image alt={project.image_path ?? ""} src={imageUrl} fill className='absolute rounded' />
