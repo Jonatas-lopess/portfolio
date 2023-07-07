@@ -1,7 +1,7 @@
-import Light from '@/components/svg/Light'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import Dark from '@/components/svg/Dark'
+import ThemeSwitch from '@/components/ThemeSwitch'
+import NavBar from '@/components/NavBar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,29 +15,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const ICON_SIZE = 18
-  const theme = 'dark';
 
   return (
-    <html lang="pt-br" className={theme}>
+    <html lang="pt-br">
       <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
         <main className="flex flex-col min-h-screen mx-4">
-          <div className="flex justify-between mt-2 space-x-8 dark:text-white">
-            <div className="space-x-4">
-              <a href="/">Home</a>
-              <a href="/projects">Projects</a>
-              <a href="/about">About</a>
-            </div>
-            <div className="flex space-x-4 items-center">
-              <span>PT</span>
-              <span className='cursor-pointer h-min'>{
-                theme === 'dark'
-                  ? <Light height={ICON_SIZE} width={ICON_SIZE} className='dark:fill-white' />
-                  : <Dark height={ICON_SIZE} width={ICON_SIZE} />
-              }</span>
-            </div>
-          </div>
-          {children}
+          <ThemeSwitch>
+            <NavBar />
+            {children}
+          </ThemeSwitch>
         </main>
       </body>
     </html>
