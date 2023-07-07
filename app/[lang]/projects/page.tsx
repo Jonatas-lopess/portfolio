@@ -2,9 +2,10 @@
 
 import Image from 'next/image'
 import { MouseEvent } from 'react'
-import supabase from '../api/db'
+import supabase from '../../api/db'
 import { ProjectObject } from '@/@types/project_object'
 import { ImageObject } from '@/@types/image_object'
+import dictionary from '@/dictionary/content'
 
 async function getData(): Promise<{ projects: ProjectObject[] | null, images: ImageObject[] }> {
     const { data: projects, error: projectsError } = await supabase.from('projects').select('name, image_path').order('created_at', { ascending: false });
@@ -23,7 +24,7 @@ async function getData(): Promise<{ projects: ProjectObject[] | null, images: Im
     return { images, projects }
 }
 
-export default async function Projects() {
+export default async function Projects({ params }: { params: { lang: string } }) {
     const { projects, images } = await getData();
 
     function listMouseOverBehavior(e: MouseEvent<HTMLLIElement>) {
@@ -44,7 +45,7 @@ export default async function Projects() {
             <div className="grid flex-1 grid-cols-1 md:grid-cols-3 w-full dark:text-white mt-20">
                 <div className="w-full space-y-10 capitalize">
                     <div className="flex justify-between border-b border-black dark:border-white text-5xl">
-                        <h1 className='font-semibold'>Projects</h1>
+                        <h1 className='font-semibold'>{dictionary[params.lang]?.Projects.Title}</h1>
                         <span>{projects ? projects.length : 0}</span>
                     </div>
                     <ul id="list-itens" className="space-y-3 text-black dark:text-white text-opacity-25 dark:text-opacity-25 text-3xl" >

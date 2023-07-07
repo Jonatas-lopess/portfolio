@@ -1,7 +1,8 @@
-import './globals.css'
+import '../globals.css'
 import { Inter } from 'next/font/google'
 import ThemeSwitch from '@/components/ThemeSwitch'
 import NavBar from '@/components/NavBar'
+import { defaultLocale } from '@/middleware'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -12,16 +13,18 @@ export const metadata = {
 
 export default function RootLayout({
   children,
+  params
 }: {
-  children: React.ReactNode
+  children: React.ReactNode,
+  params: { lang: string }
 }) {
 
   return (
-    <html lang="pt-br">
+    <html lang={params.lang ?? defaultLocale}>
       <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
         <main className="flex flex-col min-h-screen mx-4">
           <ThemeSwitch>
-            <NavBar />
+            <NavBar lang={params.lang} />
             {children}
           </ThemeSwitch>
         </main>
