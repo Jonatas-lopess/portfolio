@@ -20,11 +20,17 @@ function getLocale(request: NextRequest): string {
  
 export function middleware(request: NextRequest) {
     const pathname = request.nextUrl.pathname
-    const locale = getLocale(request) ?? defaultLocale
- 
-    return NextResponse.rewrite(
-      new URL(`/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`, request.nextUrl)
+    const pathnameIsMissingLocale = locales.every(
+        (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
     )
+
+    if(pathnameIsMissingLocale) {
+        const locale = getLocale(request) ?? defaultLocale
+    
+        return NextResponse.rewrite(
+            new URL(`/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`, request.nextUrl)
+        )
+    }
 }
 
 export const config = {

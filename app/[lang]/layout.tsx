@@ -1,6 +1,6 @@
 import '../globals.css'
 import { Inter } from 'next/font/google'
-import ThemeSwitch from '@/components/ThemeSwitch'
+import Theme from '@/components/Theme'
 import NavBar from '@/components/NavBar'
 import { defaultLocale } from '@/middleware'
 
@@ -23,10 +23,10 @@ export default function RootLayout({
     <html lang={params.lang ?? defaultLocale}>
       <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
         <main className="flex flex-col min-h-screen mx-4">
-          <ThemeSwitch>
+          <Theme>
             <NavBar lang={params.lang} />
             {children}
-          </ThemeSwitch>
+          </Theme>
         </main>
       </body>
     </html>
