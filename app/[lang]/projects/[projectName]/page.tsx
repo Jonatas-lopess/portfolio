@@ -9,7 +9,7 @@ export async function generateStaticParams() {
     const { data, error }: PostgrestSingleResponse<ProjectObject[]> = await supabase.from('projects').select('name')
     if(error) { console.error(error.message, error.details) }
 
-    return data?.map(e => ({ ProjectName: e.name }))
+    return data!.map(e => ({ ProjectName: e.name ?? "" }))
 }
 
 async function getData(name: string) {
