@@ -28,8 +28,8 @@ export default async function ProjectName({ params }: { params: { lang: string, 
                 <h2 className="text-3xl font-semibold mb-5">{dictionary[params.lang]?.ProjectInfo.Stack}</h2>
                 <p>{project.stack}</p>
                 <div className="flex flex-wrap justify-around">
-                    <a href={project.git_url ?? ""} className="bg-[#4078c0] py-3 px-12 mt-6 rounded">{dictionary[params.lang]?.ProjectInfo.CodeButton}</a>
-                    <a href={project.demo_url ?? ""} className="bg-[#bd2c00] py-3 px-12 mt-6 rounded">{dictionary[params.lang]?.ProjectInfo.VisitButton}</a>
+                    {project.git_url && <a href={project.git_url} className="bg-[#4078c0] py-3 px-12 mt-6 rounded">{dictionary[params.lang]?.ProjectInfo.CodeButton}</a>}
+                    {project.demo_url && <a href={project.demo_url} className="bg-[#bd2c00] py-3 px-12 mt-6 rounded">{dictionary[params.lang]?.ProjectInfo.VisitButton}</a>}
                 </div>
             </div>
             <div className="w-full max-h-[50rem] col-span-2 relative mx-2 mb-4">
