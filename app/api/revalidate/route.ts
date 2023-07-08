@@ -1,17 +1,17 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
     const path = "/[lang]/projects"
 
-    if(req.query.revalidate_key !== process.env.REVALIDATE_KEY) {
-        return res.status(401).json({ message: 'Invalid token' })
+    if(req.headers.get("revalidate_key") !== process.env.REVALIDATE_KEY) {
+        return NextResponse.json({ message: 'Invalid key' }, { status: 401 })
     }
 
     try {
         revalidatePath(path)
-        return res.json({ revalidatePath: path })
+        return NextResponse.json({ revalidated: true })
     } catch (error) {
-        return res.status(500).send("Error revalidating")
+        return NextResponse.json("Error revalidating", { status: 500 })
     }
 }
