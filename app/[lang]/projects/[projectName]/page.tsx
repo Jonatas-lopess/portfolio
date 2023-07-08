@@ -3,6 +3,14 @@ import Image from "next/image"
 import { PostgrestSingleResponse } from '@supabase/supabase-js'
 import { ProjectObject } from "@/@types/project_object"
 import dictionary from "@/dictionary/content"
+import { notFound } from "next/navigation"
+
+export async function generateStaticParams() {
+    const { data, error }: PostgrestSingleResponse<ProjectObject[]> = await supabase.from('projects').select('name')
+    if(error) { console.error(error.message, error.details) }
+
+    return data?.map(e => ({ ProjectName: e.name }))
+}
 
 async function getData(name: string) {
     const { data, error }: PostgrestSingleResponse<ProjectObject[]> = await supabase.from('projects').select('*').eq('name', name)
@@ -17,7 +25,9 @@ async function getData(name: string) {
 export default async function ProjectName({ params }: { params: { lang: string, projectName: string }}) {
     const { project, imageUrl } = await getData(params.projectName);
 
-    return project ? (
+    if(!project) notFound()
+
+    return (
         <div className="grid flex-1 grid-cols-1 md:grid-cols-3 w-full h-full mt-20">
             <div className="dark:text-white">
                 <h1 className="text-5xl font-semibold capitalize mb-7">{project.name}</h1>
@@ -33,10 +43,6 @@ export default async function ProjectName({ params }: { params: { lang: string, 
             <div className="w-full max-h-[50rem] col-span-2 relative mx-2 mb-4">
                 <Image alt={project.image_path ?? ""} src={imageUrl} fill className='absolute rounded' />
             </div>
-        </div>
-    ) : (
-        <div className="mt-20">
-            <h1 className="text-5xl dark:text-white font-semibold">{dictionary[params.lang]?.ProjectInfo.NotFound}</h1>
         </div>
     )
 }
