@@ -1,5 +1,3 @@
-'use client'
-
 import supabase from "@/app/api/db"
 import Image from "next/image"
 import { PostgrestSingleResponse } from '@supabase/supabase-js'

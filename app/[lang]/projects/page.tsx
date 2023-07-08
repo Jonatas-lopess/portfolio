@@ -1,11 +1,9 @@
-'use client'
-
 import Image from 'next/image'
-import { MouseEvent } from 'react'
 import supabase from '../../api/db'
 import { ProjectObject } from '@/@types/project_object'
 import { ImageObject } from '@/@types/image_object'
 import dictionary from '@/dictionary/content'
+import ListItem from '@/components/ListItem'
 
 async function getData(): Promise<{ projects: ProjectObject[] | null, images: ImageObject[] }> {
     const { data: projects, error: projectsError } = await supabase.from('projects').select('name, image_path').order('created_at', { ascending: false });
@@ -27,20 +25,6 @@ async function getData(): Promise<{ projects: ProjectObject[] | null, images: Im
 export default async function Projects({ params }: { params: { lang: string } }) {
     const { projects, images } = await getData();
 
-    function listMouseOverBehavior(e: MouseEvent<HTMLLIElement>) {
-        let textFromHoverElement = e.currentTarget.textContent?.toLowerCase();
-        let correlateImageElement = document.querySelector(`#list-images img[alt="${textFromHoverElement}"]`);
-        
-        correlateImageElement?.classList.remove("opacity-0");
-    }
-
-    function listMouseOutBehavior(e: MouseEvent<HTMLLIElement>) {
-        let textFromHoverElement = e.currentTarget.textContent?.toLowerCase();
-        let correlateImageElement = document.querySelector(`#list-images img[alt="${textFromHoverElement}"]`);
-        
-        correlateImageElement?.classList.add("opacity-0");
-    }
-    
     return (
             <div className="grid flex-1 grid-cols-1 md:grid-cols-3 w-full dark:text-white mt-20">
                 <div className="w-full space-y-10 capitalize">
@@ -50,7 +34,7 @@ export default async function Projects({ params }: { params: { lang: string } })
                     </div>
                     <ul id="list-itens" className="space-y-3 text-black dark:text-white text-opacity-25 dark:text-opacity-25 text-3xl" >
                         {
-                            projects?.map((e, i) => <li key={`project_${i}`}  className='hover:text-black dark:hover:text-white hover:text-opacity-100 hover:translate-x-3 duration-200 cursor-pointer' onMouseOver={listMouseOverBehavior} onMouseOut={listMouseOutBehavior}><a href={`/projects/${e.name}`}>{e.name}</a></li>)
+                            projects?.map((e, i) => <ListItem key={`project_${i}`} data={e} />)
                         }
                     </ul>
                 </div>
