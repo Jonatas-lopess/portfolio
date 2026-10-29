@@ -9,7 +9,7 @@ Summary of `.scratch/`. Source of truth is each ticket's `Status:` and `Blocked 
 
 ## Tickets (github-sourced-portfolio)
 
-All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12 and 13 are `done`; 06 is `ready-for-human`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
+All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13 and 14 are `done`; 06 is `ready-for-human`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
 
 | # | Ticket | Blocked by | Bug sweep |
 |---|---|---|---|
@@ -26,13 +26,13 @@ All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12 and 1
 | 11 | Approve the proofread English bio (`ready-for-human`) | 10 | |
 | 12 | Language switcher dropdown (`done`) | 09 | |
 | 13 | Profile links module with accessible names (`done`) | 10 | 8 |
-| 14 | Accessible theme toggle | 10 | 8 |
+| 14 | Accessible theme toggle (`done`) | 10 | 8 |
 | 15 | Translator module and Sync translates the Dictionary | 07, 10, 11 | |
 | 16 | Project summary Translations | 03, 15 | |
 
 ## Start here
 
-01, 02, 03, 04, 05, 07, 08, 09, 10, 12 and 13 are done. 06 is done apart from the owner's check on the deployed site. Next: 14 (unblocked) and 11 (`ready-for-human`).
+01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13 and 14 are done. 06 is done apart from the owner's check on the deployed site. Next: 11 (`ready-for-human`).
 
 ## Human steps
 

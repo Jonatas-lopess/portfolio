@@ -9,7 +9,8 @@ export const ptBR: DictionaryEntry = {
         Home: "Início",
         Projects: "Projetos",
         About: "Sobre",
-        Language: "Idioma"
+        Language: "Idioma",
+        DarkTheme: "Tema escuro"
     },
     Home: {
         Subtitle: "Desenvolvedor Full Stack"

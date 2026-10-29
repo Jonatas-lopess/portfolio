@@ -1,16 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getDictionary, Locale, localePath } from '@/lib/locale'
 import ThemeSwitch from './ThemeSwitch'
 import LocaleSwitch from './LocaleSwitch'
 
 export default function NavBar({ lang }: { lang: Locale }) {
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => setMounted(true), [])
-
     const dictionary = getDictionary(lang)
 
     return (
@@ -22,11 +17,7 @@ export default function NavBar({ lang }: { lang: Locale }) {
         </div>
         <div className="flex space-x-4 items-center">
             <LocaleSwitch locale={lang} />
-            <span className='cursor-pointer h-min'>{
-                mounted
-                    ? <ThemeSwitch />
-                    : null
-            }</span>
+            <ThemeSwitch locale={lang} />
         </div>
     </div>
     )

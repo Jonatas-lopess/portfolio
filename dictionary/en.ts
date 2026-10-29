@@ -13,7 +13,8 @@ export const en = {
         Home: "Home",
         Projects: "Projects",
         About: "About",
-        Language: "Language"
+        Language: "Language",
+        DarkTheme: "Dark theme"
     },
     Home: {
         Subtitle: "Full Stack Developer"
