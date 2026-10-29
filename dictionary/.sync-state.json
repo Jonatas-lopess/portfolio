@@ -12,13 +12,25 @@
     "NavBar.Home": "3a78695388b38b5cceefaf6796b0137877514593543b91af2752d5a17e3d736c",
     "NavBar.Language": "a4fe65264ef7dbb38d104b1e81eb3350f3142f3d16f32bdec39b1d9b42c1b8d1",
     "NavBar.Projects": "04e2a9728af7584043c5d58ae29e7cd811883e8dab15fc6287675270669a3ada",
+    "Project.AllProjects": "4b87271b6b8170d4578c23a03f0b338c34fad2341178a4702795519056a2ab18",
+    "Project.ContinueExploring": "ba12ecefbd575a068f93a803de4cd9409db320d5ad5c4fdec600d062cb07bf97",
+    "Project.CoverLabel": "28b90713bc12e07c980cdd69bf7911857cd5662aa8b567063259d2da5e9625fc",
+    "Project.Label": "985959785319747668373cc6dee294b11db782b03cdd90a2851fbdc0637c6b7b",
+    "Project.Next": "1ff57a29d7c9d11bdf61c1b80f2b289b44c1ea844824d4b94a0d52b6ba5fc858",
     "ProjectInfo.BackToProjects": "d9088c8aee0118cbc5f36d530001d9c73b9ac7187e02edebb05f322b61ec0ca0",
     "ProjectInfo.CodeButton": "340f463033e0fd5ddeabb922df4d4f1b5747494d0f5ed9894f13b6e13ca831f5",
     "ProjectInfo.NotFound": "ca4e75ac8b5aa2d713bb2babb7b3801ba06e1c6cd990cda012491ad3b72bc6b9",
     "ProjectInfo.Stack": "5ed3baab833bd4fcf82c4bc93dea8cf32bec46c9065dec8ca132ba6a9b69b7ec",
     "ProjectInfo.Summary": "34c863b318b5fff4854be4f978a4afda481db44152c20504d99e1de84b948d59",
     "ProjectInfo.VisitButton": "1c8ac867f052ea4adb4598c4e3789bbf7b5f758cc7ebab7cfe746f180f43f91e",
+    "Projects.BackToTop": "b05d95c62372213f56757332ef42e74f20cbf3b186d1a6cd37eab373d09c3b97",
+    "Projects.Breadcrumb": "45558b37103ae2486ea4acd427a9ef840a543a8eb6cd733867c06a68ae1b7803",
     "Projects.CountLabel": "6be5d28ec87155d2da5ddf89fc411c33b599cd8fee52ee3cadd4d277832c5358",
-    "Projects.Title": "04e2a9728af7584043c5d58ae29e7cd811883e8dab15fc6287675270669a3ada"
+    "Projects.Explore": "b5e06cf331c6efc18da33f9606675d6aa92c7ad9905560af45265e7719f44a6c",
+    "Projects.FooterBreadcrumb": "8a9190f9327d7aa3d6535708dae952f3885dd2cb8cb45c2297e0094d0883106a",
+    "Projects.IndexLabel": "4d971893156abb5a6405a9896da33a435331a462629855129f53495ac42f9e4b",
+    "Projects.Intro": "e2617ee5e1acb8e8f8c0dcaaf59b4c746ac58ea17f56b7faa87ead2cba870108",
+    "Projects.Title": "04e2a9728af7584043c5d58ae29e7cd811883e8dab15fc6287675270669a3ada",
+    "Projects.ViewProject": "fe70d80b9d059d784f7c9eb40210d702ac329699b3f3fdbfac86273fcb2b68ae"
   }
 }

@@ -2,25 +2,41 @@
   "ai_harness": {
     "pt-BR": {
       "text": "Uma biblioteca compartilhada (**harness**) mais dois pacotes de domínio independentes — **ERP** e **Legal** — para a construção de assistentes de IA sobre sistemas empresariais. Construído de forma incremental como um projeto de aprendizado em engenharia de IA.",
-      "sourceHash": "4734089c6defb2aef7aad906b459dd0742a6ad99c86b405726bfad9cb82763fb"
+      "sourceHash": "4734089c6defb2aef7aad906b459dd0742a6ad99c86b405726bfad9cb82763fb",
+      "tagline": {
+        "text": "Biblioteca de harness compartilhada mais pacotes de assistentes de IA para ERP e Legal: núcleo determinístico, LLM nas pontas.",
+        "sourceHash": "dcbdfa921b30815ed3e1c940d5cd0922ffc27ebb0b96c5d2f9127773959df490"
+      }
     }
   },
   "erp_project": {
     "pt-BR": {
       "text": "Um ERP modular, offline-first para o varejo brasileiro, construído como um aplicativo desktop que sincroniza pela rede local. Ele cobre controle de estoque e um caixa (PDV) que emite comprovantes fiscais, e é entregue um domínio por vez.",
-      "sourceHash": "5f20ab2c42d07bddd040093438539ef22e101f241987c525d37b78ee4a3180a8"
+      "sourceHash": "5f20ab2c42d07bddd040093438539ef22e101f241987c525d37b78ee4a3180a8",
+      "tagline": {
+        "text": "ERP offline-first para o varejo brasileiro: Tauri + React, sincronizado via LAN através de CRDT SQLite. Estoque e PDV com NFC-e.",
+        "sourceHash": "9895979e5183d468353bbf8c5b5389dfe43af62a5c4cc2bc83a51809688411cb"
+      }
     }
   },
   "legal_manager": {
     "pt-BR": {
       "text": "Um SaaS multilocatário para escritórios de advocacia. Ele gerencia o rastreamento de clientes e casos, um catálogo de casos personalizável e um mecanismo de prazos que calcula prazos legais e emite relatórios sobre eles.",
-      "sourceHash": "2737a586f702dd37276abd806aa592042ca9d620bf85eac4abbe4078d817c296"
+      "sourceHash": "2737a586f702dd37276abd806aa592042ca9d620bf85eac4abbe4078d817c296",
+      "tagline": {
+        "text": "SaaS multi-tenant para escritórios de advocacia: gestão de clientes e casos com um motor de prazos em dias úteis e relatórios.",
+        "sourceHash": "4f950cf460d7f308ef9bd2d49746f93c8f133a2781e9eada219e2874ccc7f2d5"
+      }
     }
   },
   "project-ebd": {
     "pt-BR": {
       "text": "Sistema de gerenciamento multilocatário para Escolas Bíblicas Dominicais de igrejas. Um painel administrativo web gerencia turmas, alunos, lições e cobrança; um aplicativo móvel com funcionamento prioritário offline permite que os professores façam a chamada e registrem notas na sala de aula, sincronizando posteriormente.",
-      "sourceHash": "24e987008d37078c67734617772581f60c1c8ece1d1befe3bd2b4b523bab9c51"
+      "sourceHash": "24e987008d37078c67734617772581f60c1c8ece1d1befe3bd2b4b523bab9c51",
+      "tagline": {
+        "text": "Gerenciamento multilocatário de Escola Bíblica Dominical (EBD) para igrejas: painel administrativo web + aplicativo móvel com funcionamento prioritário offline para professores.",
+        "sourceHash": "bdeb7c304ede6c20f6da9c24890ab7032b600ca852ba9dfc7de1645055e919fb"
+      }
     }
   }
 }
