@@ -1,5 +1,5 @@
 import '../globals.css'
-import { Inter } from 'next/font/google'
+import { Inter, IBM_Plex_Mono } from 'next/font/google'
 import Theme from '@/components/Theme'
 import NavBar from '@/components/NavBar'
 import type { Metadata } from 'next'
@@ -7,6 +7,8 @@ import { notFound } from 'next/navigation'
 import { getDictionary, isLocale, locales, type Locale } from '@/lib/locale'
 
 const inter = Inter({ subsets: ['latin'] })
+// Labels (breadcrumbs, counts, chips): exposed to Tailwind as `font-mono` through --font-mono.
+const mono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-mono' })
 
 // The middleware leaves static-file paths unprefixed, so an unknown file such as
 // /old-name.pdf matches [lang]; the layout turns that into a 404 below. Do not use
@@ -36,8 +38,8 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
-        <main className="flex flex-col min-h-screen mx-4">
+      <body className={inter.className + " " + mono.variable + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
+        <main className="mx-auto flex min-h-screen w-full max-w-[1400px] flex-col px-5 md:px-10 lg:px-16">
           <Theme>
             <NavBar locale={locale} />
             {children}

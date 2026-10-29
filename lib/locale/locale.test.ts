@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getDictionary, hasLocalePrefix, isLocale, localeNames, locales, localePath, negotiateLocale, switchLocalePath } from "@/lib/locale";
+import { getDictionary, hasLocalePrefix, isLocale, localeNames, locales, localePath, negotiateLocale, stripLocalePrefix, switchLocalePath } from "@/lib/locale";
 
 describe("negotiateLocale", () => {
     it("picks an exact supported Locale", () => {
@@ -137,5 +137,17 @@ describe("localeNames", () => {
     it("names exactly the supported Locales, each with a non-empty name", () => {
         expect(Object.keys(localeNames).sort()).toEqual([...locales].sort());
         for (const locale of locales) expect(localeNames[locale].trim(), locale).not.toBe("");
+    });
+});
+
+describe("stripLocalePrefix", () => {
+    it("removes the Locale prefix", () => {
+        expect(stripLocalePrefix("/pt-BR/about")).toBe("/about");
+        expect(stripLocalePrefix("/en/projects/x")).toBe("/projects/x");
+    });
+
+    it("gives the root for a bare Locale path and leaves unprefixed paths alone", () => {
+        expect(stripLocalePrefix("/en")).toBe("/");
+        expect(stripLocalePrefix("/about")).toBe("/about");
     });
 });

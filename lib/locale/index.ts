@@ -69,6 +69,13 @@ export function localePath(locale: Locale, path: string): string {
     return rest === "" ? `/${locale}` : `/${locale}/${rest}`;
 }
 
+/** `path` without its Locale prefix (`/pt-BR/about` gives `/about`, the Locale root gives `/`); an unprefixed path is returned as it is. */
+export function stripLocalePrefix(path: string): string {
+    const current = prefixLocale(path);
+    if (!current) return path;
+    return path.slice(current.length + 1) || "/";
+}
+
 /** The same page in another Locale, whether or not `path` carries a Locale prefix. */
 export function switchLocalePath(path: string, locale: Locale): string {
     const current = prefixLocale(path);

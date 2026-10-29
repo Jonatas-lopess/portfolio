@@ -6,7 +6,7 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** done
 
 - [ ] The header matches the "Projects — listing" and "Projects — SIGA Erp detail" mockups (spacing, divider, active-link treatment, separator between the Locale select and the theme icon)
 - [ ] The active link is derived from the current path in either Locale, including on a Project page (Projects stays active); it carries `aria-current="page"`

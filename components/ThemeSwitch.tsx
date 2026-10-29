@@ -31,7 +31,7 @@ export default function ThemeSwitch({ locale }: { locale: Locale }) {
             aria-label={getDictionary(locale).NavBar.DarkTheme}
             aria-pressed={mounted ? isDark : undefined}
             onClick={() => setTheme(isDark ? 'light' : 'dark')}
-            className='block cursor-pointer'
+            className='block cursor-pointer p-1'
         >
             {mounted
                 ? isDark
