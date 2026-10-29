@@ -7,14 +7,14 @@
   },
   "erp_project": {
     "pt-BR": {
-      "text": "ERP modular offline-first para o varejo brasileiro, construído como um aplicativo de desktop sincronizado via LAN (Tauri v2 + React). Entregue domínio por domínio, escopado para um cliente real em vez de um conjunto de recursos genérico.",
-      "sourceHash": "c5335e227442247d4a7c972041f8df488aa34d4aba1913a2b7f2a173d747c941"
+      "text": "Um ERP modular, offline-first para o varejo brasileiro, construído como um aplicativo desktop que sincroniza pela rede local. Ele cobre controle de estoque e um caixa (PDV) que emite comprovantes fiscais, e é entregue um domínio por vez.",
+      "sourceHash": "5f20ab2c42d07bddd040093438539ef22e101f241987c525d37b78ee4a3180a8"
     }
   },
   "legal_manager": {
     "pt-BR": {
-      "text": "SaaS multi-tenant de gestão para escritórios de advocacia. MVP foca em Controle de Clientes, Controle de Matters (catálogo personalizado), Gestão de Prazos (motor de contagem — diferencial do produto) e relatórios operacionais de prazo.",
-      "sourceHash": "8d73f709ba6d2c4ff878f329f7d1dcd2371dced0f0c444fffede414ca8e20a40"
+      "text": "Um SaaS multilocatário para escritórios de advocacia. Ele gerencia o rastreamento de clientes e casos, um catálogo de casos personalizável e um mecanismo de prazos que calcula prazos legais e emite relatórios sobre eles.",
+      "sourceHash": "2737a586f702dd37276abd806aa592042ca9d620bf85eac4abbe4078d817c296"
     }
   },
   "project-ebd": {
