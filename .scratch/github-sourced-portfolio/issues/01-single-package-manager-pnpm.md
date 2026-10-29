@@ -6,11 +6,11 @@
 
 **Blocked by:** None (can start immediately)
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] A frozen-lockfile `pnpm install` succeeds on a clean checkout
-- [ ] `package-lock.json` and `yarn.lock` are removed; exactly one lockfile (pnpm's) is committed
-- [ ] The project declares pnpm as its package manager so tools and the host pick it up
-- [ ] Dev, build, start and lint scripts still run under pnpm; typecheck and lint stay clean
-- [ ] `CLAUDE.md` commands and the lockfile note are updated to pnpm
-- [ ] No dependency versions change other than what the lockfile regeneration requires
+- [x] A frozen-lockfile `pnpm install` succeeds on a clean checkout
+- [x] `package-lock.json` and `yarn.lock` are removed; exactly one lockfile (pnpm's) is committed
+- [x] The project declares pnpm as its package manager so tools and the host pick it up
+- [x] Dev, build, start and lint scripts still run under pnpm; typecheck and lint stay clean
+- [x] `CLAUDE.md` commands and the lockfile note are updated to pnpm
+- [x] No dependency versions change other than what the lockfile regeneration requires

@@ -6,11 +6,12 @@ Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tail
 
 ## Commands
 
-- `npm run dev` — dev server
-- `npm run build` / `npm start` — production build / serve
-- `npm run lint` — `next lint` (`next/core-web-vitals`)
+- `pnpm install` — install deps (`pnpm install --frozen-lockfile` in CI)
+- `pnpm dev` — dev server
+- `pnpm build` / `pnpm start` — production build / serve
+- `pnpm lint` — `next lint` (`next/core-web-vitals`)
 
-Both `package-lock.json` and `yarn.lock` are committed.
+pnpm is the single package manager (pinned via `packageManager` in `package.json`); `pnpm-lock.yaml` is the only lockfile. Do not add `package-lock.json` or `yarn.lock`. `pnpm-workspace.yaml` only holds `allowBuilds` (pnpm 11 blocks dependency install scripts by default; `supabase` and `unrs-resolver` are set to `false`, so the Supabase CLI binary is not downloaded and `node_modules/.bin/supabase` is absent).
 
 Env vars: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (read in `app/api/db.ts`), `REVALIDATE_KEY` (checked by the revalidate route). No `.env*` file is in the repo.
 

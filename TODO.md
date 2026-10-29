@@ -9,11 +9,11 @@ Summary of `.scratch/`. Source of truth is each ticket's `Status:` and `Blocked 
 
 ## Tickets (github-sourced-portfolio)
 
-All `ready-for-agent` unless noted. Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
+All `ready-for-agent` unless noted (01 is `done`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
 
 | # | Ticket | Blocked by | Bug sweep |
 |---|---|---|---|
-| 01 | One package manager (pnpm) and a working lockfile | none | 1 |
+| 01 | One package manager (pnpm) and a working lockfile (`done`) | none | 1 |
 | 02 | Projects module with an in-memory adapter, plus Vitest | 01 | |
 | 03 | Projects from GitHub on the live pages | 02 | 4, 12 |
 | 04 | Remove Supabase | 03 | 3, 11 |
@@ -32,7 +32,7 @@ All `ready-for-agent` unless noted. Numbers are ticket files in `.scratch/github
 
 ## Start here
 
-Only 01 is unblocked. After it: 02, then 03 and 09 in parallel.
+01 is done. Next: 02, then 03 and 09 in parallel.
 
 ## Human steps
 
