@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createInMemorySource } from "@/lib/projects/in-memory";
 import { createProjects, hashSourceText } from "@/lib/projects";
-import { AllowlistEntry, Locale, RepoFacts, StoredTranslation } from "@/lib/projects/types";
+import type { Locale } from "@/lib/locale";
+import { AllowlistEntry, RepoFacts, StoredTranslation } from "@/lib/projects/types";
 
 function repo(overrides: Partial<RepoFacts> = {}): RepoFacts {
     return {

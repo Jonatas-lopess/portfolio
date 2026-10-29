@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Locale, localePath } from '@/lib/locale'
+import { SCREENSHOT_PLACEHOLDER } from '@/lib/projects/placeholder'
 
 export type ProjectIndexItem = {
     slug: string
@@ -11,8 +12,6 @@ export type ProjectIndexItem = {
     /** Public path of the Screenshot, or null to show the placeholder. */
     screenshot: string | null
 }
-
-const PLACEHOLDER = '/screenshot-placeholder.svg'
 
 /**
  * The Project index: the list of Project names, which reveals the active
@@ -59,7 +58,7 @@ export default function ProjectIndex({ projects, locale, heading, countLabel }: 
                     <Image
                         key={p.slug}
                         alt={p.title}
-                        src={p.screenshot ?? PLACEHOLDER}
+                        src={p.screenshot ?? SCREENSHOT_PLACEHOLDER}
                         fill
                         sizes="(min-width: 768px) 66vw, 0px"
                         aria-hidden={active !== p.slug}

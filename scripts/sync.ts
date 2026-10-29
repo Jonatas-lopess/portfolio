@@ -2,7 +2,7 @@ import path from "node:path";
 import { allowlist, githubOwner } from "@/projects.allowlist";
 import { runSync } from "@/lib/sync";
 import { createFileStore } from "@/lib/sync/file-store";
-import { createGitHubScreenshots } from "@/lib/sync/github-screenshots";
+import { createGitHubScreenshots, SCREENSHOT_REPO_PATH } from "@/lib/sync/github-screenshots";
 
 /** `pnpm sync`: the owner-run Sync job. Review the changes in `git diff` / `git status`, then commit. */
 async function main(): Promise<number> {
@@ -28,7 +28,7 @@ async function main(): Promise<number> {
     console.log("Screenshots");
     console.log(`  copied:    ${copied.join(", ") || "-"}`);
     console.log(`  unchanged: ${unchanged.join(", ") || "-"}`);
-    console.log(`  skipped (no docs/screenshot.png): ${skipped.join(", ") || "-"}`);
+    console.log(`  skipped (no ${SCREENSHOT_REPO_PATH}): ${skipped.join(", ") || "-"}`);
     for (const { repo, error } of failed) {
         console.error(`  FAILED ${repo}: ${redact(error)}`);
     }

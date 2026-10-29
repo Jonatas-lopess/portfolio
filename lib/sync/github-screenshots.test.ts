@@ -47,6 +47,16 @@ describe("reading a Screenshot from GitHub", () => {
         expect(error?.message).not.toContain("ghp_secret");
     });
 
+    it("says the rate limit was reached, not that the token was rejected, on a rate-limited 403", async () => {
+        const fetch = (async () =>
+            new Response("{}", { status: 403, headers: { "retry-after": "60" } })) as typeof globalThis.fetch;
+        const source = createGitHubScreenshots({ owner: "owner", token: "t", fetch });
+
+        const error = await source.getScreenshot("alpha").then(() => null, (e: Error) => e);
+        expect(error?.message).toMatch(/rate limit.*owner\/alpha/i);
+        expect(error?.message).not.toMatch(/rejected/);
+    });
+
     it("rejects on other GitHub errors", async () => {
         const source = createGitHubScreenshots({ owner: "owner", token: "t", fetch: fakeGitHub({}, 500).fetch });
 

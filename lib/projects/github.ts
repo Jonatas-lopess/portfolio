@@ -1,6 +1,5 @@
+import { assertReadable, githubFetch } from "@/lib/github/request";
 import { ProjectsSource, RepoFacts } from "@/lib/projects/types";
-
-export const DEFAULT_API_URL = "https://api.github.com";
 
 /** How long Next may serve a cached GitHub response before refetching it. */
 export const REVALIDATE_SECONDS = 3600;
@@ -35,44 +34,22 @@ type RepoMetadata = {
  * the build, and a failed revalidation keeps the last good page.
  */
 export function createGitHubSource(options: GitHubSourceOptions): Pick<ProjectsSource, "getRepo"> {
-    const apiUrl = options.apiUrl ?? DEFAULT_API_URL;
-
-    async function request(repo: string, path: string, accept: string): Promise<Response> {
-        if (!options.token) {
-            throw new Error("GITHUB_TOKEN is not set; it is needed to read the Allowlisted repos from GitHub");
-        }
-
-        const doFetch = options.fetch ?? globalThis.fetch;
-        const init: RequestInit & { next: { revalidate: number; tags: string[] } } = {
-            headers: {
-                Accept: accept,
-                Authorization: `Bearer ${options.token}`,
-                "X-GitHub-Api-Version": "2022-11-28",
-            },
-            next: { revalidate: REVALIDATE_SECONDS, tags: [PROJECTS_CACHE_TAG] },
-        };
-
-        const where = `${options.owner}/${repo}`;
-        try {
-            return await doFetch(`${apiUrl}${path}`, init);
-        } catch (error) {
-            const reason = error instanceof Error ? error.message : String(error);
-            throw new Error(`Cannot reach GitHub while reading ${where}: ${reason}`);
-        }
+    function request(repo: string, path: string, accept: string): Promise<Response> {
+        return githubFetch({
+            token: options.token,
+            fetch: options.fetch,
+            apiUrl: options.apiUrl,
+            path,
+            accept,
+            where: `${options.owner}/${repo}`,
+            init: { next: { revalidate: REVALIDATE_SECONDS, tags: [PROJECTS_CACHE_TAG] } } as RequestInit,
+            includeReason: true,
+        });
     }
 
     /** Throws a message that tells the owner what to fix. A 404 is left to the caller. */
     function failIfUnreadable(response: Response, repo: string): void {
-        const where = `${options.owner}/${repo}`;
-        if (response.status === 401 || response.status === 403) {
-            throw new Error(
-                `GITHUB_TOKEN was rejected by GitHub (${response.status}) while reading ${where}: ` +
-                    `check that the token is valid, not expired, and has read access to the repo's metadata and contents`,
-            );
-        }
-        if (!response.ok && response.status !== 404) {
-            throw new Error(`GitHub answered ${response.status} while reading ${where}`);
-        }
+        assertReadable(response, `${options.owner}/${repo}`, "the repo's metadata and contents");
     }
 
     async function getRepo(repo: string): Promise<RepoFacts> {

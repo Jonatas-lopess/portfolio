@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google'
 import Theme from '@/components/Theme'
 import NavBar from '@/components/NavBar'
 import type { Metadata } from 'next'
-import { getDictionary, Locale } from '@/lib/locale'
+import { getDictionary, type Locale } from '@/lib/locale'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,14 +20,14 @@ export default async function RootLayout({
   children: React.ReactNode,
   params: Promise<{ lang: string }>
 }) {
-  const lang = (await params).lang as Locale // middleware guarantees a valid Locale prefix
+  const locale = (await params).lang as Locale // middleware guarantees a valid Locale prefix
 
   return (
-    <html lang={lang}>
+    <html lang={locale}>
       <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
         <main className="flex flex-col min-h-screen mx-4">
           <Theme>
-            <NavBar lang={lang} />
+            <NavBar locale={locale} />
             {children}
           </Theme>
         </main>

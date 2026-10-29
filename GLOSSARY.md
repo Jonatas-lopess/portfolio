@@ -56,6 +56,10 @@ _Avoid_: Project showcase (clashes with the Showcase Visibility), gallery
 The owner's downloadable résumé document.
 _Avoid_: Resume, résumé (the old UI label "Resume" meant Project summary, not this)
 
+**Profile links**:
+The owner's LinkedIn, GitHub and CV links, shown icons-only on Home and labelled on About.
+_Avoid_: Social links, contact links, socials
+
 **Locale**:
 A language the site can be presented in, such as `en` or `pt-BR`.
 _Avoid_: Language, lang

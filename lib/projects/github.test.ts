@@ -136,6 +136,16 @@ describe("failures", () => {
         await expect(github.getRepo("alpha")).rejects.toThrow(String(status));
     });
 
+    it("says the rate limit was reached, not that the token was rejected, on a rate-limited 403", async () => {
+        const { source: github } = source({
+            ...ok,
+            "/repos/owner/alpha": { status: 403, json: {}, headers: { "x-ratelimit-remaining": "0" } },
+        });
+
+        await expect(github.getRepo("alpha")).rejects.toThrow(/rate limit.*owner\/alpha/i);
+        await expect(github.getRepo("alpha")).rejects.not.toThrow(/rejected/);
+    });
+
     it("names the repo when GitHub cannot find it", async () => {
         const { source: github } = source({});
         await expect(github.getRepo("alpha")).rejects.toThrow(/owner\/alpha/);

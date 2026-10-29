@@ -1,7 +1,5 @@
 import type { Locale } from "@/lib/locale";
 
-export type { Locale };
-
 export type Visibility = "full" | "showcase";
 
 /** One line of the Allowlist. Absence from the Allowlist is the Hidden Visibility. */

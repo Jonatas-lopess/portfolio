@@ -1,10 +1,12 @@
+import type { Locale } from "@/lib/locale";
+import { dedupeAllowlist } from "@/lib/projects/allowlist";
 import { hashSourceText } from "@/lib/projects/hash";
 import { extractMarkedBlock } from "@/lib/projects/marked-block";
-import { AllowlistEntry, Locale, Project, Projects, ProjectsSource, RepoFacts } from "@/lib/projects/types";
+import { AllowlistEntry, Project, Projects, ProjectsSource, RepoFacts } from "@/lib/projects/types";
 
-export type { AllowlistEntry, Locale, Project, Projects, ProjectsSource, RepoFacts, StoredTranslation, Visibility } from "@/lib/projects/types";
+export type { AllowlistEntry, Project, Projects, ProjectsSource, RepoFacts, StoredTranslation, Visibility } from "@/lib/projects/types";
 
-export { extractMarkedBlock, hashSourceText };
+export { dedupeAllowlist, extractMarkedBlock, hashSourceText };
 
 /** Where Sync puts a Project's Screenshot in the public folder. */
 export function screenshotPath(slug: string): string {
@@ -12,7 +14,7 @@ export function screenshotPath(slug: string): string {
 }
 
 export function createProjects({ allowlist: entries, source }: { allowlist: AllowlistEntry[]; source: ProjectsSource }): Projects {
-    const allowlist = entries.filter((entry, i) => entries.findIndex((e) => e.repo === entry.repo) === i);
+    const allowlist = dedupeAllowlist(entries);
 
     async function resolveSummary(repo: string, facts: RepoFacts, locale: Locale): Promise<string> {
         const sourceText = extractMarkedBlock(facts.readme);

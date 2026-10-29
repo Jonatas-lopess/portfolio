@@ -1,4 +1,5 @@
-import { Locale, ProjectsSource, RepoFacts, StoredTranslation } from "@/lib/projects/types";
+import type { Locale } from "@/lib/locale";
+import { ProjectsSource, RepoFacts, StoredTranslation } from "@/lib/projects/types";
 
 export type InMemoryData = {
     repos: Record<string, RepoFacts>;

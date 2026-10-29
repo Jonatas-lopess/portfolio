@@ -5,19 +5,19 @@ import { getDictionary, Locale, localePath } from '@/lib/locale'
 import ThemeSwitch from './ThemeSwitch'
 import LocaleSwitch from './LocaleSwitch'
 
-export default function NavBar({ lang }: { lang: Locale }) {
-    const dictionary = getDictionary(lang)
+export default function NavBar({ locale }: { locale: Locale }) {
+    const dictionary = getDictionary(locale)
 
     return (
     <div className="flex justify-between mt-2 space-x-8 dark:text-white">
         <div className="space-x-4">
-        <Link href={localePath(lang, '/')}>{dictionary.NavBar.Home}</Link>
-        <Link href={localePath(lang, '/projects')}>{dictionary.NavBar.Projects}</Link>
-        <Link href={localePath(lang, '/about')}>{dictionary.NavBar.About}</Link>
+        <Link href={localePath(locale, '/')}>{dictionary.NavBar.Home}</Link>
+        <Link href={localePath(locale, '/projects')}>{dictionary.NavBar.Projects}</Link>
+        <Link href={localePath(locale, '/about')}>{dictionary.NavBar.About}</Link>
         </div>
         <div className="flex space-x-4 items-center">
-            <LocaleSwitch locale={lang} />
-            <ThemeSwitch locale={lang} />
+            <LocaleSwitch locale={locale} />
+            <ThemeSwitch locale={locale} />
         </div>
     </div>
     )

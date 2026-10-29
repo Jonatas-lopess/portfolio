@@ -2,8 +2,8 @@ import type { ComponentType, SVGProps } from "react";
 import Download from "@/components/svg/Download";
 import Github from "@/components/svg/Github";
 import Linkedin from "@/components/svg/Linkedin";
-import { getDictionary } from "@/lib/locale";
-import { profileLinks, type ProfileLinkId } from "@/lib/profile-links";
+import { getDictionary, type Locale } from "@/lib/locale";
+import { profileLinkAnchorProps, profileLinkName, profileLinks, type ProfileLinkId } from "@/lib/profile-links";
 
 const ICON_SIZE = 36;
 
@@ -19,13 +19,13 @@ const icons: Record<ProfileLinkId, ComponentType<SVGProps<SVGSVGElement>>> = {
  * name as text. The URLs live in `lib/profile-links.ts`; the CV name comes from
  * the Dictionary.
  */
-export default function ProfileLinks({ variant, lang }: { variant: "icons" | "labelled"; lang: string }) {
+export default function ProfileLinks({ variant, locale }: { variant: "icons" | "labelled"; locale: Locale }) {
+    const dictionary = getDictionary(locale);
     const links = profileLinks.map((link) => {
-        const name = "name" in link ? link.name : getDictionary(lang).About.CVDownload;
+        const name = profileLinkName(link, dictionary);
         const Icon = icons[link.id];
         const icon = <Icon width={ICON_SIZE} height={ICON_SIZE} className="dark:fill-white" aria-hidden="true" />;
-        // External links open in a new tab; the CV is a same-site file that downloads.
-        const target = link.external ? { target: "_blank", rel: "noopener" } : { download: true };
+        const target = profileLinkAnchorProps(link);
 
         if (variant === "icons") {
             return <a key={link.id} href={link.href} aria-label={name} {...target}>{icon}</a>;

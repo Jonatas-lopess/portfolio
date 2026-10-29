@@ -1,4 +1,4 @@
-import { screenshotPath } from "@/lib/projects";
+import { dedupeAllowlist, screenshotPath } from "@/lib/projects";
 import type { AllowlistEntry } from "@/lib/projects";
 import type { FileStore, ScreenshotSource, ScreenshotsReport, SyncReport } from "@/lib/sync/types";
 
@@ -21,7 +21,7 @@ export async function runSync(deps: SyncDeps): Promise<SyncReport> {
 
 async function copyScreenshots({ github, store, allowlist }: SyncDeps): Promise<ScreenshotsReport> {
     const report: ScreenshotsReport = { copied: [], unchanged: [], skipped: [], failed: [] };
-    const repos = allowlist.map((entry) => entry.repo).filter((repo, i, all) => all.indexOf(repo) === i);
+    const repos = dedupeAllowlist(allowlist).map((entry) => entry.repo);
 
     for (const repo of repos) {
         try {

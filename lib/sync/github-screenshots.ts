@@ -1,4 +1,4 @@
-import { DEFAULT_API_URL } from "@/lib/projects/github";
+import { assertReadable, githubFetch } from "@/lib/github/request";
 import type { ScreenshotSource } from "@/lib/sync/types";
 
 /**
@@ -24,40 +24,21 @@ export type GitHubScreenshotsOptions = {
  * Error messages never include the token.
  */
 export function createGitHubScreenshots(options: GitHubScreenshotsOptions): ScreenshotSource {
-    const apiUrl = options.apiUrl ?? DEFAULT_API_URL;
-
     return {
         async getScreenshot(repo) {
             const where = `${options.owner}/${repo}`;
-            if (!options.token) {
-                throw new Error("GITHUB_TOKEN is not set; it is needed to read the Allowlisted repos from GitHub");
-            }
-
-            const path = `/repos/${encodeURIComponent(options.owner)}/${encodeURIComponent(repo)}/contents/${SCREENSHOT_REPO_PATH}`;
-            let response: Response;
-            try {
-                response = await (options.fetch ?? globalThis.fetch)(`${apiUrl}${path}`, {
-                    headers: {
-                        Accept: "application/vnd.github.raw+json",
-                        Authorization: `Bearer ${options.token}`,
-                        "X-GitHub-Api-Version": "2022-11-28",
-                    },
-                });
-            } catch (error) {
-                // The reason is dropped on purpose: a low-level error could echo request details.
-                throw new Error(`Cannot reach GitHub while reading ${where}`);
-            }
+            const response = await githubFetch({
+                token: options.token,
+                fetch: options.fetch,
+                apiUrl: options.apiUrl,
+                path: `/repos/${encodeURIComponent(options.owner)}/${encodeURIComponent(repo)}/contents/${SCREENSHOT_REPO_PATH}`,
+                accept: "application/vnd.github.raw+json",
+                where,
+                // The low-level reason is left out on purpose: it could echo request details.
+            });
 
             if (response.status === 404) return null;
-            if (response.status === 401 || response.status === 403) {
-                throw new Error(
-                    `GITHUB_TOKEN was rejected by GitHub (${response.status}) while reading ${where}: ` +
-                        `check that the token is valid, not expired, and has read access to the repo's contents`,
-                );
-            }
-            if (!response.ok) {
-                throw new Error(`GitHub answered ${response.status} while reading ${where}`);
-            }
+            assertReadable(response, where, "the repo's contents");
             return new Uint8Array(await response.arrayBuffer());
         },
     };
