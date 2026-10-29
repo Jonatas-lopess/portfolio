@@ -135,6 +135,7 @@ describe("Sync isolates its optional steps", () => {
     };
     const translator = createFakeTranslator();
     const readmes = { getReadme: async () => "# T\n<!-- portfolio:start -->\nAlpha.\n<!-- portfolio:end -->\n" };
+    const descriptions = { getDescription: async () => null };
 
     it("records a rejected Dictionary step under translations and still runs the others", async () => {
         const store = createMemoryStore();
@@ -144,7 +145,7 @@ describe("Sync isolates its optional steps", () => {
             store,
             allowlist: [{ repo: "alpha" }],
             translations: { translator, store: createMemoryStore(), source: {}, sourceLocale: "en", get locales() { return brokenLocales(); } },
-            projectTranslations: { translator, readmes, store: projectStore, sourceLocale: "en", locales: ["pt-BR"] },
+            projectTranslations: { translator, readmes, descriptions, store: projectStore, sourceLocale: "en", locales: ["pt-BR"] },
         });
 
         expect(report.translations).toEqual({
@@ -161,7 +162,7 @@ describe("Sync isolates its optional steps", () => {
             store: createMemoryStore(),
             allowlist: [{ repo: "alpha" }],
             translations: { translator, store: createMemoryStore(), source: { Title: "Title" }, sourceLocale: "en", locales: ["es"] },
-            projectTranslations: { translator, readmes, store: createMemoryStore(), sourceLocale: "en", get locales() { return brokenLocales(); } },
+            projectTranslations: { translator, readmes, descriptions, store: createMemoryStore(), sourceLocale: "en", get locales() { return brokenLocales(); } },
         });
 
         expect(report.projectTranslations!.failed).toEqual([{ repo: "(step)", error: "locales exploded" }]);
@@ -184,7 +185,7 @@ describe("Sync isolates its optional steps", () => {
             store: createMemoryStore(),
             allowlist: flaky,
             translations: { translator, store: createMemoryStore(), source: { Title: "Title" }, sourceLocale: "en", locales: ["es"] },
-            projectTranslations: { translator, readmes, store: createMemoryStore(), sourceLocale: "en", locales: ["pt-BR"] },
+            projectTranslations: { translator, readmes, descriptions, store: createMemoryStore(), sourceLocale: "en", locales: ["pt-BR"] },
         });
 
         expect(report.screenshots.failed).toEqual([{ repo: "(step)", error: "allowlist exploded" }]);

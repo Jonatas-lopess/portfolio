@@ -6,6 +6,7 @@ import { runSync } from "@/lib/sync";
 import { createFileStore } from "@/lib/sync/file-store";
 import { formatProjectTranslationsReport } from "@/lib/sync/format-project-translations";
 import { formatTranslationsReport } from "@/lib/sync/format-translations";
+import { createGitHubDescriptions } from "@/lib/sync/github-descriptions";
 import { createGitHubReadmes } from "@/lib/sync/github-readmes";
 import { createRedact } from "@/lib/sync/redact";
 import { createGitHubScreenshots, SCREENSHOT_REPO_PATH } from "@/lib/sync/github-screenshots";
@@ -18,8 +19,8 @@ const redact = createRedact([process.env.GITHUB_TOKEN, process.env.GEMINI_API_KE
 
 /**
  * `pnpm sync`: the owner-run Sync job. Copies Screenshots and generates missing
- * Dictionary and Project summary Translations. Review the changes in `git diff` / `git status`, then commit.
- * Exits 1 if any repo, Dictionary entry or Project summary failed.
+ * Dictionary, Project summary and Project tagline Translations. Review the changes in `git diff` / `git status`, then commit.
+ * Exits 1 if any repo, Dictionary entry, Project summary or tagline failed.
  */
 async function main(argv: string[]): Promise<number> {
     const unknown = argv.filter((arg) => arg !== "--regenerate-stale");
@@ -61,6 +62,7 @@ async function main(argv: string[]): Promise<number> {
         projectTranslations: {
             translator,
             readmes: createGitHubReadmes({ owner: githubOwner, token, apiUrl: process.env.GITHUB_API_URL }),
+            descriptions: createGitHubDescriptions({ owner: githubOwner, token, apiUrl: process.env.GITHUB_API_URL }),
             // Rooted at the repo, because projects.translations.json sits next to projects.allowlist.ts.
             store: createFileStore(process.cwd()),
             sourceLocale: defaultLocale,

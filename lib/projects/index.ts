@@ -2,11 +2,12 @@ import { defaultLocale, type Locale } from "@/lib/locale";
 import { dedupeAllowlist } from "@/lib/projects/allowlist";
 import { hashSourceText } from "@/lib/projects/hash";
 import { extractMarkedBlock } from "@/lib/projects/marked-block";
+import { taglineSourceText } from "@/lib/projects/tagline";
 import { AllowlistEntry, Project, Projects, ProjectsSource, RepoFacts } from "@/lib/projects/types";
 
 export type { AllowlistEntry, Project, Projects, ProjectsSource, RepoFacts, StoredTranslation, Visibility } from "@/lib/projects/types";
 
-export { dedupeAllowlist, extractMarkedBlock, hashSourceText };
+export { dedupeAllowlist, extractMarkedBlock, hashSourceText, taglineSourceText };
 
 /** Where Sync puts a Project's Screenshot in the public folder. */
 export function screenshotPath(slug: string): string {
@@ -31,12 +32,28 @@ export function createProjects({ allowlist: entries, source }: { allowlist: Allo
         return sourceText;
     }
 
+    /** Same chain as the summary, over the repo's short description: a current Translation, else the live English text. */
+    async function resolveTagline(repo: string, facts: RepoFacts, locale: Locale): Promise<string | null> {
+        const sourceText = taglineSourceText(facts.description);
+        if (sourceText === null) {
+            return null;
+        }
+
+        const translation = locale === defaultLocale ? null : await source.getTaglineTranslation(repo, locale);
+        if (translation && translation.text.trim() && translation.sourceHash === hashSourceText(sourceText)) {
+            return translation.text;
+        }
+
+        return sourceText;
+    }
+
     async function build(entry: AllowlistEntry, locale: Locale): Promise<Project> {
         const facts = await source.getRepo(entry.repo);
         return {
             slug: entry.repo,
             title: entry.title?.trim() || entry.repo,
             summary: await resolveSummary(entry.repo, facts, locale),
+            tagline: await resolveTagline(entry.repo, facts, locale),
             demoUrl: facts.homepage,
             stack: facts.topics,
             codeUrl: entry.visibility === "full" && facts.isPublic ? facts.url : null,

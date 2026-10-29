@@ -30,7 +30,7 @@ export type RepoFacts = {
     hasScreenshot: boolean;
 };
 
-/** A stored Translation of a Project summary. */
+/** A stored Translation of a Project summary or tagline. */
 export type StoredTranslation = {
     text: string;
     /** Hash of the Source text the Translation was made from. */
@@ -46,6 +46,8 @@ export interface ProjectsSource {
     getRepo(repo: string): Promise<RepoFacts>;
     /** The stored Translation of a repo's Project summary, if there is one. */
     getTranslation(repo: string, locale: Locale): Promise<StoredTranslation | null>;
+    /** The stored Translation of a repo's tagline (its short description), if there is one. */
+    getTaglineTranslation(repo: string, locale: Locale): Promise<StoredTranslation | null>;
 }
 
 export type Project = {
@@ -55,6 +57,11 @@ export type Project = {
     title: string;
     /** Project summary for the requested Locale. Empty when the repo has nothing to show. */
     summary: string;
+    /**
+     * The tagline for the requested Locale: the repo's short GitHub description, or its
+     * Translation while that is current. Null when the repo has no usable description.
+     */
+    tagline: string | null;
     /** Demo link. */
     demoUrl: string | null;
     /** Stack, from the repo topics. */

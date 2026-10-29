@@ -33,19 +33,19 @@ All `ready-for-agent` unless noted (all are `done` except 06, which is `ready-fo
 
 ## Tickets (new-layout)
 
-All `ready-for-agent`. Numbers are ticket files in `.scratch/new-layout/issues/`.
+All `ready-for-agent` except 02 (`done`). Numbers are ticket files in `.scratch/new-layout/issues/`.
 
 | # | Ticket | Blocked by |
 |---|---|---|
 | 01 | Site header restyle | none |
-| 02 | Project tagline (translated repo description) | none |
+| 02 | Project tagline (translated repo description) (`done`) | none |
 | 03 | Projects listing page | 01, 02 |
 | 04 | Project page layout | 01, 02 |
 | 05 | Typographic Project cover | 04 |
 
 ## Start here
 
-All github-sourced-portfolio tickets are done; new-layout starts at 01 and 02 (no blockers). 06 is done apart from the owner's check on the deployed site (see Human steps). 
+All github-sourced-portfolio tickets are done; new-layout: 02 is done, 01 has no blockers, 03 and 04 wait for 01. 06 is done apart from the owner's check on the deployed site (see Human steps). 
 
 ## Human steps
 
@@ -54,4 +54,5 @@ All github-sourced-portfolio tickets are done; new-layout starts at 01 and 02 (n
 - 07: commit a PNG at `docs/screenshot.png` in each repo to show, then run `GITHUB_TOKEN=... pnpm sync` and commit the new files in `public/screenshots/`. Not run against real GitHub yet.
 - 15: to generate or refresh Translations, set `GEMINI_API_KEY` (free key, Google AI Studio) or `TRANSLATOR=libretranslate` and run `pnpm sync`; review and commit `dictionary/`. Not run against the real Gemini API (no key exists yet); the default model `gemini-3.5-flash-lite` came from Google's docs and may need `GEMINI_MODEL`.
 - 16: to translate Project summaries, add `<!-- portfolio:start -->` / `<!-- portfolio:end -->` to each README on the Allowlist, run `GITHUB_TOKEN=... GEMINI_API_KEY=... pnpm sync` (or `TRANSLATOR=libretranslate`), review and commit `projects.translations.json`, then deploy (the file is part of the build). A README edit later shows English until you rerun Sync (stale is reported; `--regenerate-stale` replaces). Not run against real GitHub or the real Gemini API; the Allowlist is empty so `projects.translations.json` is `{}`.
+- new-layout/02: Sync now also translates each Project's short GitHub description (the Tagline). Same steps as 16 (`GITHUB_TOKEN=... GEMINI_API_KEY=... pnpm sync`, review and commit `projects.translations.json`, deploy); a repo with no description on GitHub is skipped and reported. Not run against real GitHub or the real Gemini API.
 - 06 and 16: `dynamicParams = false` in `app/[lang]/layout.tsx` was replaced by a `notFound()` check because it made pages 404 after `POST /api/revalidate`; confirm on the deployed site that a revalidate keeps pages up.

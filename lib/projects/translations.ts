@@ -6,11 +6,15 @@ import stored from "@/projects.translations.json";
 export const PROJECT_TRANSLATIONS_FILE = "projects.translations.json";
 
 /**
- * `{ "<repo>": { "<locale>": { "text": string, "sourceHash": string } } }`. The hash is
- * `hashSourceText` of the Marked block the text was translated from; the Projects
- * module shows the text only while the live Marked block still has that hash.
+ * `{ "<repo>": { "<locale>": { "text": string, "sourceHash": string, "tagline"?: { "text": string, "sourceHash": string } } } }`.
+ * `text` and `sourceHash` are the Project summary: the hash is `hashSourceText` of the
+ * Marked block the text was translated from. `tagline` is the Translation of the repo's
+ * short description, with the hash of the (trimmed) description. Both are optional and
+ * independent (an entry from before taglines has no `tagline`; a repo with a description
+ * but no Marked block has only `tagline`). The Projects module shows each text only while
+ * its live Source text still has the recorded hash.
  */
-export type ProjectTranslationsFile = Record<string, Record<string, StoredTranslation>>;
+export type ProjectTranslationsFile = Record<string, Record<string, Partial<StoredTranslation> & { tagline?: StoredTranslation }>>;
 
 const has = (object: object, key: string) => Object.prototype.hasOwnProperty.call(object, key);
 const isObject = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
@@ -22,20 +26,30 @@ function entryOf(value: unknown): StoredTranslation | null {
 }
 
 /**
- * Reads Project summary Translations from the committed JSON file. The file is
+ * Reads Project summary and tagline Translations from the committed JSON file. The file is
  * imported statically, so it is part of the build and the site never reads the
  * filesystem at request time, whatever the host. `data` is for tests.
  */
-export function createTranslationReader(data: unknown = stored): Pick<ProjectsSource, "getTranslation"> {
+export function createTranslationReader(data: unknown = stored): Pick<ProjectsSource, "getTranslation" | "getTaglineTranslation"> {
     if (!isObject(data)) {
         throw new Error(`${PROJECT_TRANSLATIONS_FILE} must be a JSON object keyed by repo name`);
     }
 
+    /** The entry stored for a repo and Locale, if there is an object there. */
+    function localeEntry(repo: string, locale: Locale): Record<string, unknown> | null {
+        const byLocale = has(data as object, repo) ? (data as Record<string, unknown>)[repo] : undefined;
+        if (!isObject(byLocale) || !has(byLocale, locale)) return null;
+        const entry = byLocale[locale];
+        return isObject(entry) ? entry : null;
+    }
+
     return {
         async getTranslation(repo: string, locale: Locale) {
-            const byLocale = has(data, repo) ? data[repo] : undefined;
-            if (!isObject(byLocale) || !has(byLocale, locale)) return null;
-            return entryOf(byLocale[locale]);
+            return entryOf(localeEntry(repo, locale));
+        },
+        async getTaglineTranslation(repo: string, locale: Locale) {
+            const entry = localeEntry(repo, locale);
+            return entry !== null && has(entry, "tagline") ? entryOf(entry.tagline) : null;
         },
     };
 }

@@ -4,7 +4,7 @@ import { syncProjectTranslations } from "@/lib/sync/project-translations";
 import { syncTranslations } from "@/lib/sync/translations";
 import type { FileStore, ProjectTranslationsDeps, ProjectTranslationsReport, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
 
-export type { DictionaryLocaleReport, FileStore, ProjectTranslationRef, ProjectTranslationsDeps, ProjectTranslationsReport, ReadmeSource, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
+export type { DescriptionSource, DictionaryLocaleReport, FileStore, ProjectTranslationRef, ProjectTranslationsDeps, ProjectTranslationsReport, ReadmeSource, ScreenshotSource, ScreenshotsReport, SyncReport, TaglineTranslationsReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
 
 export type SyncDeps = {
     github: ScreenshotSource;
@@ -13,13 +13,13 @@ export type SyncDeps = {
     allowlist: AllowlistEntry[];
     /** The Translations step. Without it Sync only copies Screenshots. */
     translations?: TranslationsDeps;
-    /** The Project summary Translations step. Reads only Allowlisted Projects' READMEs. */
+    /** The Project summary and tagline Translations step. Reads only Allowlisted Projects (READMEs and descriptions). */
     projectTranslations?: ProjectTranslationsDeps;
 };
 
 /**
  * The Sync job. Each step reports into its own key of the SyncReport: Screenshots,
- * then, when given, the Dictionary Translations and the Project summary Translations.
+ * then, when given, the Dictionary Translations and the Project summary and tagline Translations.
  * Steps are isolated: one that rejects is recorded as a failure under its own key (entry
  * `(step)`) and the others still run and keep their reports.
  */
@@ -55,6 +55,7 @@ export async function runSync(deps: SyncDeps): Promise<SyncReport> {
             stale: [],
             unchanged: [],
             skipped: [],
+            taglines: { generated: [], regenerated: [], stale: [], unchanged: [], skipped: [] },
             pruned: [],
             failed: [{ repo: "(step)", error: message(error) }],
         }));

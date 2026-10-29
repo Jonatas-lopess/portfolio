@@ -1,9 +1,12 @@
 import type { ProjectTranslationRef, ProjectTranslationsReport } from "@/lib/sync/types";
 
-const label = ({ repo, locale }: { repo: string; locale?: string }) => (locale ? `${repo} (${locale})` : repo);
+const label = ({ repo, locale, field }: { repo: string; locale?: string; field?: "tagline" }) => {
+    const base = locale ? `${repo} (${locale})` : repo;
+    return field === "tagline" ? `${base} tagline` : base;
+};
 
 /**
- * The Project summaries part of the Sync report as lines for the terminal.
+ * The Project summaries and taglines part of the Sync report as lines for the terminal.
  * `projectCount` is the size of the Allowlist, so an empty one gets a clear
  * "nothing to translate". Failures are grouped by message.
  */
@@ -56,6 +59,24 @@ export function formatProjectTranslationsReport(
     lines.push(`  unchanged:   ${report.unchanged.length}`);
     if (report.skipped.length) {
         lines.push(`  skipped (no Marked block in the README, so nothing to translate): ${report.skipped.join(", ")}`);
+    }
+
+    const taglines = report.taglines;
+    lines.push("Project taglines");
+    if (taglines.generated.length) lines.push(`  generated:   ${list(taglines.generated)}`);
+    if (taglines.regenerated.length) lines.push(`  regenerated: ${list(taglines.regenerated)}`);
+    const keptStaleTaglines = taglines.stale.filter((s) => !taglines.regenerated.some((r) => r.repo === s.repo && r.locale === s.locale));
+    const knownTaglines = keptStaleTaglines.filter((s) => !s.unknownHash);
+    const unknownTaglines = keptStaleTaglines.filter((s) => s.unknownHash);
+    if (knownTaglines.length) {
+        lines.push(`  STALE (the repo's description changed since translated; the site shows the English text; left as is, run \`pnpm sync --regenerate-stale\` to replace): ${list(knownTaglines)}`);
+    }
+    if (unknownTaglines.length) {
+        lines.push(`  STALE (no recorded hash, so it cannot be told whether the description changed; the site shows the English text; left as is, run \`pnpm sync --regenerate-stale\` to replace): ${list(unknownTaglines)}`);
+    }
+    lines.push(`  unchanged:   ${taglines.unchanged.length}`);
+    if (taglines.skipped.length) {
+        lines.push(`  skipped (no description on GitHub, so nothing to translate): ${taglines.skipped.join(", ")}`);
     }
     lines.push(...pruned());
 

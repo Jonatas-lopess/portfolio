@@ -22,7 +22,7 @@ One or two paragraphs about the Project, written for visitors of the site.
 
 - **Shown:** only the text between the first `<!-- portfolio:start -->` and the first `<!-- portfolio:end -->` after it, trimmed. Whitespace inside the comments is ignored (`<!--portfolio:start-->` works).
 - **Never shown:** everything else in the README. Nothing outside the markers is ever published.
-- **Fallback:** if the README has no usable block (no README, a missing marker, an empty block, or a second start marker before the end), the summary is the repo's short GitHub description, or nothing if it has none. The short description is never translated.
+- **Fallback:** if the README has no usable block (no README, a missing marker, an empty block, or a second start marker before the end), the summary is the repo's short GitHub description, or nothing if it has none. As a summary fallback it is shown as is (English); it is translated separately, as the Project's tagline (see "Translations").
 - **Other Locales:** see "Project summary Translations" below.
 
 ## Translations

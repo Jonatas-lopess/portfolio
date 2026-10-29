@@ -32,7 +32,11 @@ _Avoid_: Private project, unlisted
 
 **Project summary**:
 The prose describing a Project, taken from the marked block of its README.
-_Avoid_: Resume, description (that is the repo's short GitHub description), overview
+_Avoid_: Resume, description (that is the repo's short GitHub description, the source of the Tagline), overview
+
+**Tagline**:
+The one-line pitch of a Project: the repo's short GitHub description, shown in the requested Locale. A Translation of it is produced by Sync with the same Stale flow as the Project summary; a Project with no description has no Tagline.
+_Avoid_: Description (that is the repo field it comes from, not what the site shows), subtitle, blurb, category
 
 **Marked block**:
 The part of a README the owner has explicitly opted in to the site; nothing outside it is ever shown.

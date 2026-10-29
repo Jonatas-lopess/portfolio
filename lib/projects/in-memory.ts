@@ -5,6 +5,8 @@ export type InMemoryData = {
     repos: Record<string, RepoFacts>;
     /** Stored Translations, by repo and then by Locale. */
     translations?: Record<string, Partial<Record<Locale, StoredTranslation>>>;
+    /** Stored tagline Translations, by repo and then by Locale. */
+    taglineTranslations?: Record<string, Partial<Record<Locale, StoredTranslation>>>;
 };
 
 export function createInMemorySource(data: InMemoryData): ProjectsSource {
@@ -18,6 +20,9 @@ export function createInMemorySource(data: InMemoryData): ProjectsSource {
         },
         async getTranslation(repo, locale) {
             return data.translations?.[repo]?.[locale] ?? null;
+        },
+        async getTaglineTranslation(repo, locale) {
+            return data.taglineTranslations?.[repo]?.[locale] ?? null;
         },
     };
 }

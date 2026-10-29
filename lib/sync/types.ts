@@ -13,6 +13,12 @@ export interface ReadmeSource {
     getReadme(repo: string): Promise<string | null>;
 }
 
+/** Where Sync reads each Project's tagline source from: the repo's short GitHub description. */
+export interface DescriptionSource {
+    /** The short description, or null when the repo has none. Rejects when the repo cannot be read. */
+    getDescription(repo: string): Promise<string | null>;
+}
+
 /**
  * Where Sync puts files, addressed by public path (e.g. `/screenshots/alpha.png`,
  * the same strings the Projects module serves them under).
@@ -52,11 +58,13 @@ export type TranslationsDeps = {
     regenerateStale?: boolean;
 };
 
-/** What the Project summary Translations step needs; all of it injectable so tests use fakes. */
+/** What the Project summary and tagline Translations step needs; all of it injectable so tests use fakes. */
 export type ProjectTranslationsDeps = {
     translator: Translator;
     /** Reads the README of each Allowlisted Project. Hidden repos are never asked for. */
     readmes: ReadmeSource;
+    /** Reads the short description (the tagline's Source text) of each Allowlisted Project. Hidden repos are never asked for. */
+    descriptions: DescriptionSource;
     /** Rooted at the repo root: the Translations are in `/projects.translations.json`. */
     store: FileStore;
     /** Source text's language; it is never a target. */
@@ -67,9 +75,24 @@ export type ProjectTranslationsDeps = {
     regenerateStale?: boolean;
 };
 
-/** One Translation of one Project's summary. */
+/** One Translation of one Project's summary or tagline. */
 export type ProjectTranslationRef = { repo: string; locale: string };
 
+/** What happened to the Project taglines; see `ProjectTranslationsReport` for the meaning of each key. */
+export type TaglineTranslationsReport = {
+    generated: ProjectTranslationRef[];
+    regenerated: ProjectTranslationRef[];
+    /** Entries whose description changed since they were translated (or that have no recorded hash). Left alone unless regenerated. */
+    stale: (ProjectTranslationRef & { unknownHash: boolean })[];
+    unchanged: ProjectTranslationRef[];
+    /** Projects whose repo has no description: nothing to translate. Not an error. */
+    skipped: string[];
+};
+
+/**
+ * The top-level keys are about Project summaries; `taglines` holds the same for taglines.
+ * `pruned` and `failed` cover both.
+ */
 export type ProjectTranslationsReport = {
     /** Translated because the Project had no Translation in that Locale. */
     generated: ProjectTranslationRef[];
@@ -84,6 +107,8 @@ export type ProjectTranslationsReport = {
     unchanged: ProjectTranslationRef[];
     /** Projects whose README has no usable Marked block: nothing to translate. Not an error. */
     skipped: string[];
+    /** The same, for the Project taglines (the repo's short description). */
+    taglines: TaglineTranslationsReport;
     /**
      * Repos that were in the stored file but are not on the Allowlist any more: removed from
      * the file, so a Hidden repo's name does not stay in committed data. Empty when the run failed (nothing is written then).
@@ -92,8 +117,10 @@ export type ProjectTranslationsReport = {
     /**
      * Things that could not be done. When this is not empty nothing was translated or written.
      * `repo` is `(file)` for the stored file as a whole, `(locale)` for a bad Locale tag.
+     * `field` is `"tagline"` for a failure about a tagline; absent means the Project summary
+     * (or the file as a whole).
      */
-    failed: { repo: string; locale?: string; error: string }[];
+    failed: { repo: string; locale?: string; field?: "tagline"; error: string }[];
 };
 
 export type DictionaryLocaleReport = {
