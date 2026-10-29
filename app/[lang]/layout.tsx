@@ -3,14 +3,16 @@ import { Inter } from 'next/font/google'
 import Theme from '@/components/Theme'
 import NavBar from '@/components/NavBar'
 import type { Metadata } from 'next'
-import { getDictionary, locales, type Locale } from '@/lib/locale'
+import { notFound } from 'next/navigation'
+import { getDictionary, isLocale, locales, type Locale } from '@/lib/locale'
 
 const inter = Inter({ subsets: ['latin'] })
 
 // The middleware leaves static-file paths unprefixed, so an unknown file such as
-// /old-name.pdf would otherwise match [lang] and render a page with status 200.
-export const dynamicParams = false
-
+// /old-name.pdf matches [lang]; the layout turns that into a 404 below. Do not use
+// `export const dynamicParams = false` for this: with it, on-demand revalidation
+// (POST /api/revalidate) makes every revalidated page answer 404 (NoFallbackError
+// in Next 15.5) until the next deploy.
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
 }
@@ -28,7 +30,9 @@ export default async function RootLayout({
   children: React.ReactNode,
   params: Promise<{ lang: string }>
 }) {
-  const locale = (await params).lang as Locale // middleware guarantees a valid Locale prefix
+  const { lang } = await params
+  if (!isLocale(lang)) notFound()
+  const locale = lang
 
   return (
     <html lang={locale}>

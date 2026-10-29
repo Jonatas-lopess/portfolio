@@ -4,7 +4,9 @@ import { defaultLocale, localeNames, locales } from "@/lib/locale";
 import { allowlist, githubOwner } from "@/projects.allowlist";
 import { runSync } from "@/lib/sync";
 import { createFileStore } from "@/lib/sync/file-store";
+import { formatProjectTranslationsReport } from "@/lib/sync/format-project-translations";
 import { formatTranslationsReport } from "@/lib/sync/format-translations";
+import { createGitHubReadmes } from "@/lib/sync/github-readmes";
 import { createGitHubScreenshots, SCREENSHOT_REPO_PATH } from "@/lib/sync/github-screenshots";
 import { createTranslator, TranslatorConfigError } from "@/lib/translator";
 
@@ -12,8 +14,8 @@ const USAGE = "Usage: pnpm sync [--regenerate-stale]";
 
 /**
  * `pnpm sync`: the owner-run Sync job. Copies Screenshots and generates missing
- * Dictionary Translations. Review the changes in `git diff` / `git status`, then commit.
- * Exits 1 if any repo or Dictionary entry failed.
+ * Dictionary and Project summary Translations. Review the changes in `git diff` / `git status`, then commit.
+ * Exits 1 if any repo, Dictionary entry or Project summary failed.
  */
 async function main(argv: string[]): Promise<number> {
     const unknown = argv.filter((arg) => arg !== "--regenerate-stale");
@@ -54,6 +56,15 @@ async function main(argv: string[]): Promise<number> {
             locales,
             regenerateStale,
         },
+        projectTranslations: {
+            translator,
+            readmes: createGitHubReadmes({ owner: githubOwner, token, apiUrl: process.env.GITHUB_API_URL }),
+            // Rooted at the repo, because projects.translations.json sits next to projects.allowlist.ts.
+            store: createFileStore(process.cwd()),
+            sourceLocale: defaultLocale,
+            locales,
+            regenerateStale,
+        },
     });
 
     let failures = 0;
@@ -70,6 +81,12 @@ async function main(argv: string[]): Promise<number> {
 
     if (report.translations) {
         const text = formatTranslationsReport(report.translations, redact);
+        for (const line of text.lines) console.log(line);
+        failures += text.failures;
+    }
+
+    if (report.projectTranslations) {
+        const text = formatProjectTranslationsReport(report.projectTranslations, allowlist.length, redact);
         for (const line of text.lines) console.log(line);
         failures += text.failures;
     }

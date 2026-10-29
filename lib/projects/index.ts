@@ -1,4 +1,4 @@
-import type { Locale } from "@/lib/locale";
+import { defaultLocale, type Locale } from "@/lib/locale";
 import { dedupeAllowlist } from "@/lib/projects/allowlist";
 import { hashSourceText } from "@/lib/projects/hash";
 import { extractMarkedBlock } from "@/lib/projects/marked-block";
@@ -22,7 +22,8 @@ export function createProjects({ allowlist: entries, source }: { allowlist: Allo
             return facts.description ?? "";
         }
 
-        const translation = await source.getTranslation(repo, locale);
+        // The default Locale's summary is the Source text itself; it has no Translation.
+        const translation = locale === defaultLocale ? null : await source.getTranslation(repo, locale);
         if (translation && translation.text.trim() && translation.sourceHash === hashSourceText(sourceText)) {
             return translation.text;
         }

@@ -1,9 +1,10 @@
 import { dedupeAllowlist, screenshotPath } from "@/lib/projects";
 import type { AllowlistEntry } from "@/lib/projects";
+import { syncProjectTranslations } from "@/lib/sync/project-translations";
 import { syncTranslations } from "@/lib/sync/translations";
-import type { FileStore, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps } from "@/lib/sync/types";
+import type { FileStore, ProjectTranslationsDeps, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps } from "@/lib/sync/types";
 
-export type { DictionaryLocaleReport, FileStore, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
+export type { DictionaryLocaleReport, FileStore, ProjectTranslationRef, ProjectTranslationsDeps, ProjectTranslationsReport, ReadmeSource, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
 
 export type SyncDeps = {
     github: ScreenshotSource;
@@ -12,16 +13,20 @@ export type SyncDeps = {
     allowlist: AllowlistEntry[];
     /** The Translations step. Without it Sync only copies Screenshots. */
     translations?: TranslationsDeps;
+    /** The Project summary Translations step. Reads only Allowlisted Projects' READMEs. */
+    projectTranslations?: ProjectTranslationsDeps;
 };
 
 /**
  * The Sync job. Each step reports into its own key of the SyncReport: Screenshots,
- * then, when `translations` is given, the Dictionary Translations. A step that
+ * then, when given, the Dictionary Translations and the Project summary Translations. A step that
  * fails does not stop the other.
  */
 export async function runSync(deps: SyncDeps): Promise<SyncReport> {
-    const screenshots = await copyScreenshots(deps);
-    return deps.translations ? { screenshots, translations: await syncTranslations(deps.translations) } : { screenshots };
+    const report: SyncReport = { screenshots: await copyScreenshots(deps) };
+    if (deps.translations) report.translations = await syncTranslations(deps.translations);
+    if (deps.projectTranslations) report.projectTranslations = await syncProjectTranslations(deps.projectTranslations, deps.allowlist);
+    return report;
 }
 
 async function copyScreenshots({ github, store, allowlist }: SyncDeps): Promise<ScreenshotsReport> {

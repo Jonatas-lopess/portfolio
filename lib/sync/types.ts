@@ -7,6 +7,12 @@ export interface ScreenshotSource {
     getScreenshot(repo: string): Promise<Uint8Array | null>;
 }
 
+/** Where Sync reads READMEs from: the owner's GitHub repos. */
+export interface ReadmeSource {
+    /** The README text, or null when the repo has none. Rejects when the repo cannot be read. */
+    getReadme(repo: string): Promise<string | null>;
+}
+
 /**
  * Where Sync puts files, addressed by public path (e.g. `/screenshots/alpha.png`,
  * the same strings the Projects module serves them under).
@@ -46,6 +52,47 @@ export type TranslationsDeps = {
     regenerateStale?: boolean;
 };
 
+/** What the Project summary Translations step needs; all of it injectable so tests use fakes. */
+export type ProjectTranslationsDeps = {
+    translator: Translator;
+    /** Reads the README of each Allowlisted Project. Hidden repos are never asked for. */
+    readmes: ReadmeSource;
+    /** Rooted at the repo root: the Translations are in `/projects.translations.json`. */
+    store: FileStore;
+    /** Source text's language; it is never a target. */
+    sourceLocale: string;
+    /** Every Locale that should have a Translation of each summary (`sourceLocale` is ignored if listed). */
+    locales: readonly string[];
+    /** Replace Stale translations too. Off by default: the owner decides when their wording is replaced. */
+    regenerateStale?: boolean;
+};
+
+/** One Translation of one Project's summary. */
+export type ProjectTranslationRef = { repo: string; locale: string };
+
+export type ProjectTranslationsReport = {
+    /** Translated because the Project had no Translation in that Locale. */
+    generated: ProjectTranslationRef[];
+    /** Stale entries replaced, only with `regenerateStale`. */
+    regenerated: ProjectTranslationRef[];
+    /**
+     * Entries whose Marked block changed since they were translated, or that have no recorded
+     * hash (`unknownHash`, so there is no way to tell). Left alone unless regenerated.
+     */
+    stale: (ProjectTranslationRef & { unknownHash: boolean })[];
+    /** Entries that match the live Marked block. Never sent. */
+    unchanged: ProjectTranslationRef[];
+    /** Projects whose README has no usable Marked block: nothing to translate. Not an error. */
+    skipped: string[];
+    /** Repos in the stored file that are not on the Allowlist. Left alone; the owner may delete them. */
+    orphaned: string[];
+    /**
+     * Things that could not be done. When this is not empty nothing was translated or written.
+     * `repo` is `(file)` for the stored file as a whole, `(locale)` for a bad Locale tag.
+     */
+    failed: { repo: string; locale?: string; error: string }[];
+};
+
 export type DictionaryLocaleReport = {
     /** The Locale had no Dictionary file and one was written. */
     created: boolean;
@@ -77,4 +124,6 @@ export type SyncReport = {
     screenshots: ScreenshotsReport;
     /** Present only when the run was given a Translator. */
     translations?: TranslationsReport;
+    /** Present only when the run was given the Project summary step. */
+    projectTranslations?: ProjectTranslationsReport;
 };
