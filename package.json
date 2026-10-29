@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest run",
-    "sync": "tsx scripts/sync.ts"
+    "sync": "tsx --env-file-if-exists=.env.local scripts/sync.ts"
   },
   "dependencies": {
     "@types/node": "20.2.5",
