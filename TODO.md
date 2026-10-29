@@ -23,7 +23,7 @@ All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13 a
 | 08 | Project index with React hover state (`done`) | 03, 09 | 6 |
 | 09 | Locale module (`done`) | 02 | 5 |
 | 10 | Dictionary: typed English source with every string moved in (`done`) | 09 | 7, 9 |
-| 11 | Approve the proofread English bio (`ready-for-human`) | 10 | |
+| 11 | Approve the proofread English bio (`done`) | 10 | |
 | 12 | Language switcher dropdown (`done`) | 09 | |
 | 13 | Profile links module with accessible names (`done`) | 10 | 8 |
 | 14 | Accessible theme toggle (`done`) | 10 | 8 |
@@ -32,11 +32,10 @@ All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13 a
 
 ## Start here
 
-01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13 and 14 are done. 06 is done apart from the owner's check on the deployed site. Next: 11 (`ready-for-human`).
+01 to 05, 07 to 14 are done. 06 is done apart from the owner's check on the deployed site. 11 is done. Next: 15, then 16.
 
 ## Human steps
 
 - 03: add the repos to show to `projects.allowlist.ts` and set `GITHUB_TOKEN` (fine-grained, read-only metadata and contents, limited to those repos) in the deploy environment. Add `<!-- portfolio:start -->` / `<!-- portfolio:end -->` to each README.
 - 06: on the deployed site, set `REVALIDATE_KEY`, edit a README or description, then `curl -X POST https://<site>/api/revalidate -H 'x-revalidate-key: <key>'` and confirm both Locales' list and Project pages show the change. Switch any existing caller from the deprecated `revalidate_key` header to `x-revalidate-key` (nginx drops underscore headers by default). Not verifiable from the repo.
-- 11: approve the proofread English bio (blocks 15 and so 16).
 - 07: commit a PNG at `docs/screenshot.png` in each repo to show, then run `GITHUB_TOKEN=... pnpm sync` and commit the new files in `public/screenshots/`. Not run against real GitHub yet.

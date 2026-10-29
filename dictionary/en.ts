@@ -21,7 +21,7 @@ export const en = {
     },
     About: {
         Title: "About me",
-        Text: "Im a formed Computer technician and Full stack programmer, currently attending to Universidade de Vassouras seeking a degree in Software Engineering and have more than one year of experience in full stack and mobile development. Already worked outsourced making applications to Unimed in Laravel and mobile apps in React Native. Im studying NextJS, take a look in some of my projects.",
+        Text: "Full-stack developer, active since 2019 across professional experience and personal projects, with emphasis on PHP/Laravel and React for web, React Native and Flutter for mobile, and Tauri for desktop. Solid knowledge of SQL/NoSQL databases with hands-on experience using tools like Supabase and MongoDB Atlas. Focused on AI-assisted development, applying design patterns such as DDD, TDD, and SDD.",
         LinksHeading: "Links",
         CVDownload: "Download CV"
     },

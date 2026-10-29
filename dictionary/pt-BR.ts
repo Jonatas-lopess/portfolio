@@ -17,7 +17,7 @@ export const ptBR: DictionaryEntry = {
     },
     About: {
         Title: "Sobre mim",
-        Text: "Sou Técnico de Informática formado e Programador Full stack, atualmente cursando Engenharia de Software na Universidade de Vassouras e tenho mais de um ano de experiência em desenvolvimento full stack e mobile. Já trabalhei terceirizado fazendo aplicativos para Unimed em Laravel e aplicativos móveis em React Native. Estou estudando NextJS, dê uma olhada em alguns dos meus projetos.",
+        Text: "Desenvolvedor full-stack, atuando desde 2019 entre experiência profissional e desenvolvimento de projetos próprios, com ênfase em PHP/Laravel e React na web, React Native e Flutter no mobile, e Tauri para desktop. Conhecimento sólido em Banco de Dados SQL/NoSQL com prática no uso de ferramentas como Supabase e MongoDB Atlas. Foco em desenvolvimento assistido por IA, aplicando padrões de projeto como DDD, TDD e SDD.",
         LinksHeading: "Links",
         CVDownload: "Baixar CV"
     },

@@ -3,9 +3,17 @@ import { Inter } from 'next/font/google'
 import Theme from '@/components/Theme'
 import NavBar from '@/components/NavBar'
 import type { Metadata } from 'next'
-import { getDictionary, type Locale } from '@/lib/locale'
+import { getDictionary, locales, type Locale } from '@/lib/locale'
 
 const inter = Inter({ subsets: ['latin'] })
+
+// The middleware leaves static-file paths unprefixed, so an unknown file such as
+// /old-name.pdf would otherwise match [lang] and render a page with status 200.
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return locales.map((lang) => ({ lang }))
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
   const { Title, Description } = getDictionary((await params).lang).Meta

@@ -3,7 +3,7 @@ import Download from "@/components/svg/Download";
 import Github from "@/components/svg/Github";
 import Linkedin from "@/components/svg/Linkedin";
 import { getDictionary, type Locale } from "@/lib/locale";
-import { profileLinkAnchorProps, profileLinkName, profileLinks, type ProfileLinkId } from "@/lib/profile-links";
+import { profileLinkAnchorProps, profileLinkHref, profileLinkName, profileLinks, type ProfileLinkId } from "@/lib/profile-links";
 
 const ICON_SIZE = 36;
 
@@ -25,15 +25,16 @@ export default function ProfileLinks({ variant, locale }: { variant: "icons" | "
         const name = profileLinkName(link, dictionary);
         const Icon = icons[link.id];
         const icon = <Icon width={ICON_SIZE} height={ICON_SIZE} className="dark:fill-white" aria-hidden="true" />;
-        const target = profileLinkAnchorProps(link);
+        const href = profileLinkHref(link, locale);
+        const target = profileLinkAnchorProps(link, locale);
 
         if (variant === "icons") {
-            return <a key={link.id} href={link.href} aria-label={name} {...target}>{icon}</a>;
+            return <a key={link.id} href={href} aria-label={name} {...target}>{icon}</a>;
         }
 
         return (
             <div key={link.id} className="w-min">
-                <a href={link.href} {...target} className={"flex items-center space-x-2 dark:text-white" + (link.external ? "" : " w-max")}>{icon}<span>{name}</span></a>
+                <a href={href} {...target} className={"flex items-center space-x-2 dark:text-white" + (link.external ? "" : " w-max")}>{icon}<span>{name}</span></a>
             </div>
         );
     });
