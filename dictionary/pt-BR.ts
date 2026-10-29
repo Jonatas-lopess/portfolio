@@ -8,7 +8,8 @@ export const ptBR: DictionaryEntry = {
     NavBar: {
         Home: "Início",
         Projects: "Projetos",
-        About: "Sobre"
+        About: "Sobre",
+        Language: "Idioma"
     },
     Home: {
         Subtitle: "Desenvolvedor Full Stack"

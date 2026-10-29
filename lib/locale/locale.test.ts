@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getDictionary, hasLocalePrefix, isLocale, localePath, negotiateLocale, switchLocalePath } from "@/lib/locale";
+import { getDictionary, hasLocalePrefix, isLocale, localeNames, locales, localePath, negotiateLocale, switchLocalePath } from "@/lib/locale";
 
 describe("negotiateLocale", () => {
     it("picks an exact supported Locale", () => {
@@ -130,5 +130,12 @@ describe("getDictionary", () => {
     it("falls back to the English Dictionary for an unknown Locale", () => {
         expect(getDictionary("fr").NavBar.Projects).toBe("Projects");
         expect(getDictionary("").NavBar.Home).toBe("Home");
+    });
+});
+
+describe("localeNames", () => {
+    it("names exactly the supported Locales, each with a non-empty name", () => {
+        expect(Object.keys(localeNames).sort()).toEqual([...locales].sort());
+        for (const locale of locales) expect(localeNames[locale].trim(), locale).not.toBe("");
     });
 });

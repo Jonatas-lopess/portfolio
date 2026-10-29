@@ -5,6 +5,17 @@ export const locales = ["en", "pt-BR"] as const;
 
 export type Locale = (typeof locales)[number];
 
+/**
+ * Each Locale's name in its own language, shown in the language switcher. Typed
+ * `Record<Locale, string>`, so a Locale added to the list above without a name
+ * here is a compile error. Deliberately not in the Dictionary: a native name
+ * must read the same whichever Locale the page is in.
+ */
+export const localeNames: Record<Locale, string> = {
+    en: "English",
+    "pt-BR": "Português",
+};
+
 /** The Locale used when nothing better is known; it is also the Source text's language. */
 export const defaultLocale: Locale = "en";
 

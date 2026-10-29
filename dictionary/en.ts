@@ -12,7 +12,8 @@ export const en = {
     NavBar: {
         Home: "Home",
         Projects: "Projects",
-        About: "About"
+        About: "About",
+        Language: "Language"
     },
     Home: {
         Subtitle: "Full Stack Developer"
