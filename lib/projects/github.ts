@@ -5,6 +5,9 @@ export const DEFAULT_API_URL = "https://api.github.com";
 /** How long Next may serve a cached GitHub response before refetching it. */
 export const REVALIDATE_SECONDS = 3600;
 
+/** Cache tag on every GitHub fetch, so the revalidate route can drop them all with one `revalidateTag`. */
+export const PROJECTS_CACHE_TAG = "projects";
+
 export type GitHubSourceOptions = {
     /** Account that owns every Allowlisted repo. */
     owner: string;
@@ -40,13 +43,13 @@ export function createGitHubSource(options: GitHubSourceOptions): Pick<ProjectsS
         }
 
         const doFetch = options.fetch ?? globalThis.fetch;
-        const init: RequestInit & { next: { revalidate: number } } = {
+        const init: RequestInit & { next: { revalidate: number; tags: string[] } } = {
             headers: {
                 Accept: accept,
                 Authorization: `Bearer ${options.token}`,
                 "X-GitHub-Api-Version": "2022-11-28",
             },
-            next: { revalidate: REVALIDATE_SECONDS },
+            next: { revalidate: REVALIDATE_SECONDS, tags: [PROJECTS_CACHE_TAG] },
         };
 
         const where = `${options.owner}/${repo}`;

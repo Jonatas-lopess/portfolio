@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createGitHubSource } from "@/lib/projects/github";
+import { createGitHubSource, PROJECTS_CACHE_TAG } from "@/lib/projects/github";
 
 type Call = { url: string; init?: RequestInit };
 
@@ -87,6 +87,17 @@ describe("reading a repo from GitHub", () => {
 
         for (const call of calls) {
             expect((call.init as { next?: { revalidate?: number } }).next?.revalidate).toBe(3600);
+        }
+    });
+
+    it("tags every cached response so the revalidate route can drop them together", async () => {
+        const { source: github, calls } = source(routes);
+        await github.getRepo("alpha");
+
+        expect(PROJECTS_CACHE_TAG).toBe("projects");
+        expect(calls.length).toBeGreaterThan(0);
+        for (const call of calls) {
+            expect((call.init as { next?: { tags?: string[] } }).next?.tags).toEqual(["projects"]);
         }
     });
 

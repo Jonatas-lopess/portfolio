@@ -29,7 +29,7 @@ Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional 
 - `ListItem` (client component) reveals the image on hover by querying `#list-images img[alt="<lowercased li text>"]`, so the image's `alt` must equal the lowercased project title. Don't change the alt text or the list markup in one place without the other.
 - `projects/[projectName]/page.tsx` fetches a single project by slug and calls `notFound()` if absent.
 
-**Cache invalidation.** `POST /api/revalidate` calls `revalidatePath("/[lang]/projects")` when the `revalidate_key` request header matches `REVALIDATE_KEY`.
+**Cache invalidation.** Every GitHub fetch in `lib/projects/github.ts` carries `next: { revalidate: 3600, tags: ["projects"] }`. `POST /api/revalidate` (key in the `x-revalidate-key` header, compared in constant time with `REVALIDATE_KEY`; 401 if missing, wrong, or `REVALIDATE_KEY` is unset) calls `revalidateTag("projects")` and `revalidatePath` for each concrete `/{locale}/projects` and `/{locale}/projects/{slug}` (locales from `lib/locale`, slugs from `listSlugs()`). Do not pass `"/[lang]/projects"` to `revalidatePath`: a dynamic pattern without a `type` has no effect. The old header name `revalidate_key` is still accepted but deprecated (the underscore is dropped by nginx by default); new callers use `x-revalidate-key`.
 
 **Theming.** `components/Theme.tsx` wraps `next-themes` (`attribute="class"`) and pairs with Tailwind `darkMode: 'class'`; `ThemeSwitch` toggles it.
 
