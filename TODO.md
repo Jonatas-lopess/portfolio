@@ -9,13 +9,13 @@ Summary of `.scratch/`. Source of truth is each ticket's `Status:` and `Blocked 
 
 ## Tickets (github-sourced-portfolio)
 
-All `ready-for-agent` unless noted (01 and 02 are `done`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
+All `ready-for-agent` unless noted (01, 02 and 03 are `done`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
 
 | # | Ticket | Blocked by | Bug sweep |
 |---|---|---|---|
 | 01 | One package manager (pnpm) and a working lockfile (`done`) | none | 1 |
 | 02 | Projects module with an in-memory adapter, plus Vitest (`done`) | 01 | |
-| 03 | Projects from GitHub on the live pages | 02 | 4, 12 |
+| 03 | Projects from GitHub on the live pages (`done`) | 02 | 4, 12 |
 | 04 | Remove Supabase | 03 | 3, 11 |
 | 05 | Upgrade Next to a patched version | 01, 04 | 2 |
 | 06 | Revalidation covers the Locale pages and project pages | 03 | 10 |
@@ -32,8 +32,9 @@ All `ready-for-agent` unless noted (01 and 02 are `done`). Numbers are ticket fi
 
 ## Start here
 
-01 and 02 are done. Next: 03 and 09 in parallel.
+01, 02 and 03 are done. Next: 09 (Locale module), then 04, 06, 07 and 08 as their blockers clear.
 
 ## Human steps
 
+- 03: add the repos to show to `projects.allowlist.ts` and set `GITHUB_TOKEN` (fine-grained, read-only metadata and contents, limited to those repos) in the deploy environment. Add `<!-- portfolio:start -->` / `<!-- portfolio:end -->` to each README.
 - 11: approve the proofread English bio (blocks 15 and so 16).
