@@ -1,0 +1,16 @@
+# 08: Project index with React hover state
+
+**What to build:** The Projects page's list of Project names reveals the matching Screenshot on hover, with the state held in React rather than a document query on `alt` text. One client module receives the Projects, each with its Screenshot, and owns the list, the images and the hover state. Links carry the current Locale. Only Allowlisted Projects' images are rendered, instead of every file in a storage bucket.
+
+**Spec:** github-sourced-portfolio. Bug sweep finding 6.
+
+**Blocked by:** 03: Projects from GitHub on the live pages; 09: Locale module
+
+**Status:** ready-for-agent
+
+- [ ] Hovering (and keyboard-focusing) a Project name shows that Project's Screenshot and hides it again afterwards
+- [ ] The implementation no longer relies on matching `alt` text or on a document selector
+- [ ] Each link goes to the Project page in the current Locale, via the Locale module's path building, and navigates without a full page reload
+- [ ] Only Screenshots of listed Projects are rendered; a Project without one shows the placeholder
+- [ ] The Project count shown next to the title matches the number listed
+- [ ] The page works on a touch device (no hover) by still letting the visitor open each Project

@@ -1,0 +1,3 @@
+# Project content comes from GitHub through an allowlist and marked README blocks
+
+Projects were stored in Supabase, which meant duplicating details that already live in each project's repo. We now read them from GitHub with a read-only token: structured fields from repo metadata, the Project summary only from a Marked block in the README, and only for repos on a public Allowlist in this repo. Hidden is the default, so a mislabelled commercial repo cannot appear by accident. The alternative of committing all project content here avoids a token, but means the details drift from the repos. Auto-discovering repos by topic was rejected because one wrong topic would publish a commercial repo.
