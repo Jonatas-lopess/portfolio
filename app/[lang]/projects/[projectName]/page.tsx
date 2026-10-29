@@ -20,7 +20,7 @@ export default async function ProjectName({ params }: { params: Promise<{ lang: 
         <div className="grid flex-1 grid-cols-1 md:grid-cols-3 w-full h-full mt-20">
             <div className="dark:text-white">
                 <h1 className="text-5xl font-semibold capitalize mb-7">{project.title}</h1>
-                <h2 className="text-3xl font-semibold mb-5">{getDictionary(lang).ProjectInfo.Resume}</h2>
+                <h2 className="text-3xl font-semibold mb-5">{getDictionary(lang).ProjectInfo.Summary}</h2>
                 <p className="mb-7">{project.summary}</p>
                 <h2 className="text-3xl font-semibold mb-5">{getDictionary(lang).ProjectInfo.Stack}</h2>
                 <p>{project.stack.join(", ")}</p>

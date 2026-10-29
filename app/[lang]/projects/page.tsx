@@ -18,7 +18,7 @@ export default async function Projects({ params }: { params: Promise<{ lang: str
                 <div className="w-full space-y-10 capitalize">
                     <div className="flex justify-between border-b border-black dark:border-white text-5xl">
                         <h1 className='font-semibold'>{getDictionary(lang).Projects.Title}</h1>
-                        <span>{list.length}</span>
+                        <span><span className="sr-only">{getDictionary(lang).Projects.CountLabel}: </span>{list.length}</span>
                     </div>
                     <ul id="list-itens" className="space-y-3 text-black dark:text-white text-opacity-25 dark:text-opacity-25 text-3xl" >
                         {

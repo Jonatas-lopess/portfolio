@@ -11,7 +11,7 @@ export default async function About({ params }: { params: Promise<{ lang: string
         <div className="my-20">
             <h1 className="text-5xl dark:text-white font-semibold mb-7">{getDictionary(lang).About.Title}</h1>
             <p className="dark:text-white mb-5">{getDictionary(lang).About.Text}</p>
-            <h2 className="text-3xl dark:text-white font-semibold mb-7">Links</h2>
+            <h2 className="text-3xl dark:text-white font-semibold mb-7">{getDictionary(lang).About.LinksHeading}</h2>
             <div className=" flex flex-col space-y-4">
                 <div className="w-min">
                     <a href="https://www.linkedin.com/in/jonatas-lopes-b6629a211" target="_blank" rel="noopener" className="flex items-center space-x-2 dark:text-white"><Linkedin  width={ICON_SIZE} height={ICON_SIZE} className="dark:fill-white" /><span>LinkedIn</span></a>

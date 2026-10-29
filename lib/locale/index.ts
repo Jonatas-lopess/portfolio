@@ -1,4 +1,4 @@
-import dictionary from "@/dictionary/content";
+import { dictionaries, type DictionaryEntry } from "@/dictionary";
 
 /** Every Locale the site is presented in. Adding a Locale starts here. */
 export const locales = ["en", "pt-BR"] as const;
@@ -66,5 +66,5 @@ export function switchLocalePath(path: string, locale: Locale): string {
 
 /** The Dictionary for a Locale, or the English one when `locale` is not supported. */
 export function getDictionary(locale: string): DictionaryEntry {
-    return dictionary[isLocale(locale) ? locale : defaultLocale];
+    return dictionaries[isLocale(locale) ? locale : defaultLocale];
 }

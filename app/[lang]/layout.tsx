@@ -2,13 +2,15 @@ import '../globals.css'
 import { Inter } from 'next/font/google'
 import Theme from '@/components/Theme'
 import NavBar from '@/components/NavBar'
-import { Locale } from '@/lib/locale'
+import type { Metadata } from 'next'
+import { getDictionary, Locale } from '@/lib/locale'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'Jonatas Lopes - Portfolio',
-  description: 'Conheça minha carreira na área da programação, são 6 anos de estudo e mais de 1 ano de experiência no mercado.',
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { Title, Description } = getDictionary((await params).lang).Meta
+
+  return { title: Title, description: Description }
 }
 
 export default async function RootLayout({
