@@ -9,7 +9,7 @@ Summary of `.scratch/`. Source of truth is each ticket's `Status:` and `Blocked 
 
 ## Tickets (github-sourced-portfolio)
 
-All `ready-for-agent` unless noted (01, 02, 03, 04 and 09 are `done`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
+All `ready-for-agent` unless noted (01, 02, 03, 04, 05 and 09 are `done`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
 
 | # | Ticket | Blocked by | Bug sweep |
 |---|---|---|---|
@@ -17,7 +17,7 @@ All `ready-for-agent` unless noted (01, 02, 03, 04 and 09 are `done`). Numbers a
 | 02 | Projects module with an in-memory adapter, plus Vitest (`done`) | 01 | |
 | 03 | Projects from GitHub on the live pages (`done`) | 02 | 4, 12 |
 | 04 | Remove Supabase (`done`) | 03 | 3, 11 |
-| 05 | Upgrade Next to a patched version | 01, 04 | 2 |
+| 05 | Upgrade Next to a patched version (`done`, Next 15.5.28) | 01, 04 | 2 |
 | 06 | Revalidation covers the Locale pages and project pages | 03 | 10 |
 | 07 | Sync job copies Screenshots | 03 | |
 | 08 | Project index with React hover state | 03, 09 | 6 |
@@ -32,7 +32,7 @@ All `ready-for-agent` unless noted (01, 02, 03, 04 and 09 are `done`). Numbers a
 
 ## Start here
 
-01, 02, 03, 04 and 09 are done. Next: 05 (Next upgrade), 06, 07, 08, 10 and 12 (all unblocked).
+01, 02, 03, 04, 05 and 09 are done. Next: 06, 07, 08, 10 and 12 (all unblocked).
 
 ## Human steps
 

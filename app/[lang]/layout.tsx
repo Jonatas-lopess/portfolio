@@ -11,20 +11,21 @@ export const metadata = {
   description: 'Conheça minha carreira na área da programação, são 6 anos de estudo e mais de 1 ano de experiência no mercado.',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params
 }: {
   children: React.ReactNode,
-  params: { lang: Locale }
+  params: Promise<{ lang: string }>
 }) {
+  const lang = (await params).lang as Locale // middleware guarantees a valid Locale prefix
 
   return (
-    <html lang={params.lang}>
+    <html lang={lang}>
       <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
         <main className="flex flex-col min-h-screen mx-4">
           <Theme>
-            <NavBar lang={params.lang} />
+            <NavBar lang={lang} />
             {children}
           </Theme>
         </main>
