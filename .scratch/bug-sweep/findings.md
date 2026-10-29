@@ -1,6 +1,6 @@
 # Bug sweep findings (2026-10-29)
 
-Input for `/to-tickets`. Not tickets yet. Checks run: `tsc --noEmit` (clean), `next lint` (clean), `next build` (fails without Supabase env, expected, goes away with the Supabase removal), `npm ci` (fails, see 1).
+All findings are folded into the `github-sourced-portfolio` tickets (see "Ticket map" at the bottom); there is no separate bug-sweep ticket set. Checks run: `tsc --noEmit` (clean), `next lint` (clean), `next build` (fails without Supabase env, expected, goes away with the Supabase removal), `npm ci` (fails, see 1).
 
 "Verified" = reproduced by a command. "By reading" = from the code, not run.
 
@@ -21,3 +21,22 @@ Input for `/to-tickets`. Not tickets yet. Checks run: `tsc --noEmit` (clean), `n
 10. **Revalidate route**: `revalidatePath("/[lang]/projects")` passes a literal dynamic pattern, which may not invalidate `/en/projects` or `/pt-BR/projects`, and project detail pages are not covered. Also the header name `revalidate_key` contains an underscore, which some proxies drop. Needs verification against a running deployment before fixing. (`app/api/revalidate/route.ts`)
 11. **`types_db.ts` is UTF-16 with CRLF**, which breaks plain-text tools. Goes away with the Supabase removal.
 12. **Project page image `alt` is `image_path`** (a file name), not a description. (`app/[lang]/projects/[projectName]/page.tsx`)
+
+## Ticket map
+
+All tickets are in `.scratch/github-sourced-portfolio/issues/`.
+
+| Finding | Ticket |
+|---|---|
+| 1 | 01 |
+| 2 | 05 |
+| 3 | 03, 04 (superseded) |
+| 4 | 03 |
+| 5 | 09 |
+| 6 | 08 |
+| 7 | 10 |
+| 8 | 13 (links), 14 (theme toggle) |
+| 9 | 10 |
+| 10 | 06 |
+| 11 | 04 |
+| 12 | 03 |

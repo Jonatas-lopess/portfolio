@@ -10,6 +10,10 @@ Issues and specs for this repo live as markdown files in `.scratch/`.
 - Triage state is recorded as a `Status:` line near the top of each issue file (see `triage-labels.md` for the role strings)
 - Comments and conversation history append to the bottom of the file under a `## Comments` heading
 
+## Summary
+
+`TODO.md` at the repo root summarizes every `.scratch/` effort: status, ticket order and blockers. Update it whenever a ticket is added or its `Status:` changes.
+
 ## When a skill says "publish to the issue tracker"
 
 Create a new file under `.scratch/<feature-slug>/` (creating the directory if needed).
