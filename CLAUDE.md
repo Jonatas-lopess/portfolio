@@ -18,9 +18,11 @@ Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional 
 
 ## Architecture
 
-**Locale routing via middleware.** All pages live under `app/[lang]/`. `middleware.ts` checks whether the path starts with `/en` or `/pt-BR`; if not, it negotiates a locale from `Accept-Language` (default `en`) and *rewrites* (not redirects) to `/{locale}{path}`. So the URL bar stays locale-free until `LocaleSwitch` pushes an explicit `/{lang}/...` path. `locales` lives in `middleware.ts`, and `layout.tsx` imports `defaultLocale` from there. Adding a locale means editing both the middleware list and the dictionary.
+**Locale module (`lib/locale/`).** The only place that knows the Locales. It exports `locales`, `Locale`, `defaultLocale`, `isLocale`, `negotiateLocale(acceptLanguage)` (q-values, underscores, case-insensitive, regional tags match their language, unknown gives the default), `hasLocalePrefix(path)`, `localePath(locale, path)` (absolute path for an unprefixed path), `switchLocalePath(path, locale)` (prefixed or unprefixed input) and `getDictionary(locale)` (English for an unknown Locale). It is pure and unit-tested in `lib/locale/locale.test.ts`. Middleware, the root layout, `NavBar`, `LocaleSwitch`, `ListItem` and the pages all go through it; nothing else hard-codes `en` or `pt-BR` (apart from the keys of `dictionary/content.ts`). Every link is built with `localePath`, never a relative href. Adding a locale means adding it to `locales` and giving it a dictionary entry.
 
-**Translations are a typed in-code dictionary.** `dictionary/content.ts` is a `Record<string, DictionaryEntry>` keyed by locale; the shape is the global ambient interface in `@types/dictionary_entry.d.ts` (no import needed). Pages read `dictionary[params.lang]?.Section.Key`. New strings must be added to the interface and to both locales.
+**Locale routing via middleware.** All pages live under `app/[lang]/`. `middleware.ts` checks `hasLocalePrefix(pathname)`; if the path is not prefixed, it uses `negotiateLocale` on `Accept-Language` and *rewrites* (not redirects) to `localePath(locale, pathname)`. So the URL bar stays locale-free until `LocaleSwitch` pushes an explicit `/{lang}/...` path. Pages type `params.lang` as `Locale`, which the middleware guarantees.
+
+**Translations are a typed in-code dictionary.** `dictionary/content.ts` is a `Record<string, DictionaryEntry>` keyed by locale; the shape is the global ambient interface in `@types/dictionary_entry.d.ts` (no import needed). Pages read `getDictionary(params.lang).Section.Key`. New strings must be added to the interface and to both locales.
 
 **Project data comes from GitHub through `lib/projects/` (server components).** The Allowlist is `projects.allowlist.ts`; the live adapter is `lib/projects/live.ts` (see ADR 0001), and the pages read through the module in `lib/projects/index.ts`. The build fails loudly on a bad or missing token or an unreadable Allowlisted repo.
 - `projects/page.tsx` renders every Project's image stacked at `opacity-0`, with a placeholder when there is no Screenshot.
@@ -32,11 +34,6 @@ Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional 
 **Theming.** `components/Theme.tsx` wraps `next-themes` (`attribute="class"`) and pairs with Tailwind `darkMode: 'class'`; `ThemeSwitch` toggles it.
 
 **Config notes.** `next.config.js` is empty: all images are local (`public/`), so no `next/image` host allowance is needed. `@/*` maps to the repo root (no `src/`). `public/curriculo-jonatas.pdf` is the CV linked from the About page.
-
-## Known quirks
-
-- `generateStaticParams` in `projects/[projectName]/page.tsx` returns `{ ProjectName }` (capital P), but the route segment is `projectName`, so the static params don't match the segment.
-- `ListItem` links to `/projects/${name}` with no locale prefix, so it relies on the middleware rewrite and drops an explicit locale choice.
 
 ## Agent skills
 

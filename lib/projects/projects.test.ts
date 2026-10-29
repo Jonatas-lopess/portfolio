@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createInMemorySource } from "@/lib/projects/in-memory";
 import { createProjects, hashSourceText } from "@/lib/projects";
-import { AllowlistEntry, RepoFacts, StoredTranslation } from "@/lib/projects/types";
+import { AllowlistEntry, Locale, RepoFacts, StoredTranslation } from "@/lib/projects/types";
 
 function repo(overrides: Partial<RepoFacts> = {}): RepoFacts {
     return {
@@ -215,7 +215,7 @@ describe("the Locale fallback for the Project summary", () => {
     const readme = "<!-- portfolio:start -->Live English text.<!-- portfolio:end -->";
 
     async function summaryFor(
-        locale: string,
+        locale: Locale,
         translations: Record<string, StoredTranslation> | undefined,
         facts: Partial<RepoFacts> = {},
     ) {
@@ -252,8 +252,8 @@ describe("the Locale fallback for the Project summary", () => {
     it("uses the Source text when the Locale has no Translation", async () => {
         const translations = { "pt-BR": { text: "Texto.", sourceHash: hashSourceText("Live English text.") } };
 
-        expect(await summaryFor("es", translations)).toBe("Live English text.");
-        expect(await summaryFor("es", undefined)).toBe("Live English text.");
+        expect(await summaryFor("en", translations)).toBe("Live English text.");
+        expect(await summaryFor("en", undefined)).toBe("Live English text.");
     });
 
     it("skips a blank Translation", async () => {

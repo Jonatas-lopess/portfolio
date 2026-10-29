@@ -1,4 +1,6 @@
-export type Locale = string;
+import type { Locale } from "@/lib/locale";
+
+export type { Locale };
 
 export type Visibility = "full" | "showcase";
 

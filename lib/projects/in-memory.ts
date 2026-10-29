@@ -3,7 +3,7 @@ import { Locale, ProjectsSource, RepoFacts, StoredTranslation } from "@/lib/proj
 export type InMemoryData = {
     repos: Record<string, RepoFacts>;
     /** Stored Translations, by repo and then by Locale. */
-    translations?: Record<string, Record<Locale, StoredTranslation>>;
+    translations?: Record<string, Partial<Record<Locale, StoredTranslation>>>;
 };
 
 export function createInMemorySource(data: InMemoryData): ProjectsSource {

@@ -2,7 +2,7 @@ import '../globals.css'
 import { Inter } from 'next/font/google'
 import Theme from '@/components/Theme'
 import NavBar from '@/components/NavBar'
-import { defaultLocale } from '@/middleware'
+import { Locale } from '@/lib/locale'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,11 +16,11 @@ export default function RootLayout({
   params
 }: {
   children: React.ReactNode,
-  params: { lang: string }
+  params: { lang: Locale }
 }) {
 
   return (
-    <html lang={params.lang ?? defaultLocale}>
+    <html lang={params.lang}>
       <body className={inter.className + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
         <main className="flex flex-col min-h-screen mx-4">
           <Theme>

@@ -1,19 +1,14 @@
 import { usePathname, useRouter } from 'next/navigation'
+import { Locale, locales, switchLocalePath } from '@/lib/locale'
 
-export default function LocaleSwitch({ locale }: { locale: string }) {
-    let pathname = usePathname()
+export default function LocaleSwitch({ locale }: { locale: Locale }) {
+    const pathname = usePathname()
     const router = useRouter()
-    const lang = locale === "en" ? "pt-BR" : "en"
+    const other = locales.find((l) => l !== locale) ?? locale
 
     function handleSwitch() {
-        if(pathname.startsWith(`/${locale}`)) {
-            pathname = pathname.replace(`/${locale}`, `/${lang}`)
-        } else {
-            pathname = `/${lang}` + pathname
-        }
-
-        router.push(pathname)
+        router.push(switchLocalePath(pathname, other))
     }
 
-    return <button onClick={handleSwitch} >{lang.toUpperCase()}</button>
+    return <button onClick={handleSwitch} >{other.toUpperCase()}</button>
 }
