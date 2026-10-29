@@ -1,3 +1,2 @@
 allowBuilds:
-  supabase: false
   unrs-resolver: false

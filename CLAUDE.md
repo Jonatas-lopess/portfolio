@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tailwind (class-based dark mode) and Supabase. Tests use Vitest (`@/*` alias resolved in `vitest.config.ts`).
+Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tailwind (class-based dark mode) and project data read from GitHub. Tests use Vitest (`@/*` alias resolved in `vitest.config.ts`).
 
 ## Commands
 
@@ -12,9 +12,9 @@ Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tail
 - `pnpm lint` — `next lint` (`next/core-web-vitals`)
 - `pnpm test` — `vitest run` (no network needed)
 
-pnpm is the single package manager (pinned via `packageManager` in `package.json`); `pnpm-lock.yaml` is the only lockfile. Do not add `package-lock.json` or `yarn.lock`. `pnpm-workspace.yaml` only holds `allowBuilds` (pnpm 11 blocks dependency install scripts by default; `supabase` and `unrs-resolver` are set to `false`, so the Supabase CLI binary is not downloaded and `node_modules/.bin/supabase` is absent).
+pnpm is the single package manager (pinned via `packageManager` in `package.json`); `pnpm-lock.yaml` is the only lockfile. Do not add `package-lock.json` or `yarn.lock`. `pnpm-workspace.yaml` only holds `allowBuilds` (pnpm 11 blocks dependency install scripts by default; `unrs-resolver` is set to `false`).
 
-Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional `GITHUB_API_URL` override), `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (read in `app/api/db.ts`), `REVALIDATE_KEY` (checked by the revalidate route). No `.env*` file is in the repo.
+Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional `GITHUB_API_URL` override), `REVALIDATE_KEY` (checked by the revalidate route). No `.env*` file is in the repo.
 
 ## Architecture
 
@@ -22,19 +22,16 @@ Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional 
 
 **Translations are a typed in-code dictionary.** `dictionary/content.ts` is a `Record<string, DictionaryEntry>` keyed by locale; the shape is the global ambient interface in `@types/dictionary_entry.d.ts` (no import needed). Pages read `dictionary[params.lang]?.Section.Key`. New strings must be added to the interface and to both locales.
 
-**Project data now comes from GitHub through `lib/projects/` (see `projects.allowlist.ts`, `lib/projects/live.ts`, ADR 0001); the pages no longer import Supabase. The Supabase description below is legacy, deleted by ticket 04.**
+**Project data comes from GitHub through `lib/projects/` (server components).** The Allowlist is `projects.allowlist.ts`; the live adapter is `lib/projects/live.ts` (see ADR 0001), and the pages read through the module in `lib/projects/index.ts`. The build fails loudly on a bad or missing token or an unreadable Allowlisted repo.
+- `projects/page.tsx` renders every Project's image stacked at `opacity-0`, with a placeholder when there is no Screenshot.
+- `ListItem` (client component) reveals the image on hover by querying `#list-images img[alt="<lowercased li text>"]`, so the image's `alt` must equal the lowercased project title. Don't change the alt text or the list markup in one place without the other.
+- `projects/[projectName]/page.tsx` fetches a single project by slug and calls `notFound()` if absent.
 
-**Legacy Supabase data (server components).** `app/api/db.ts` exports a singleton anon client (typed with `Database` from `types_db.ts`, which is UTF-16 with CRLF line endings — it can look binary to some tools).
-- `projects` table: columns mirrored by `@types/project_object.d.ts`.
-- `images` storage bucket: `projects/page.tsx` lists the whole bucket and renders every image stacked at `opacity-0`.
-- `ListItem` (client component) reveals the image on hover by querying `#list-images img[alt="<lowercased li text>"]` — so the image's `alt` must equal the lowercased project name. Don't change the alt text or the list markup in one place without the other.
-- `projects/[projectName]/page.tsx` fetches a single project by name and calls `notFound()` if absent.
-
-**Cache invalidation.** `POST /api/revalidate` calls `revalidatePath("/[lang]/projects")` when the `revalidate_key` request header matches `REVALIDATE_KEY` (presumably invoked when Supabase data changes).
+**Cache invalidation.** `POST /api/revalidate` calls `revalidatePath("/[lang]/projects")` when the `revalidate_key` request header matches `REVALIDATE_KEY`.
 
 **Theming.** `components/Theme.tsx` wraps `next-themes` (`attribute="class"`) and pairs with Tailwind `darkMode: 'class'`; `ThemeSwitch` toggles it.
 
-**Config notes.** `next.config.js` whitelists the Supabase storage host for `next/image`; a different Supabase project needs its domain added there. `@/*` maps to the repo root (no `src/`). `public/curriculo-jonatas.pdf` is the CV linked from the About page.
+**Config notes.** `next.config.js` is empty: all images are local (`public/`), so no `next/image` host allowance is needed. `@/*` maps to the repo root (no `src/`). `public/curriculo-jonatas.pdf` is the CV linked from the About page.
 
 ## Known quirks
 
