@@ -1,0 +1,24 @@
+{
+  "pt-BR": {
+    "About.CVDownload": "1a2d45a28b06a8a4f70d9c12b593774176588211096769ce580ca723304f9a21",
+    "About.LinksHeading": "9024c197d84940e47ff6aa631b7711c4cbff4e7fb2fe1a574a3592b662983a0d",
+    "About.Text": "4fc591ab9be3715ba9154129e76a09cc6eb24621809f8a8390a5b070cda7c6a8",
+    "About.Title": "1359ec883b211e729ff91608fc944ffbb03ac804d3f951425af0cc33b3e187cc",
+    "Home.Subtitle": "4fc63349b0059c15bc6a3bd485565a2ac7c04d9f103c2649aac915357ebb341b",
+    "Meta.Description": "d1ac1458cb5579bdb662fe997835204cdd0ebe0fc9b7f67141191888862d7137",
+    "Meta.Title": "bcd60c7e65607e1d3b3408a637ec9de3de0af911fad262afe0cd18c51cbc99ed",
+    "NavBar.About": "4efca0d10c5feb8e9b35eb1d994f2905bb71714e6a271f511d713b539ea5faa1",
+    "NavBar.DarkTheme": "3f11a5cc643ab5140966ef077d289165283d33669a68f0bed1efce3a9881384e",
+    "NavBar.Home": "3a78695388b38b5cceefaf6796b0137877514593543b91af2752d5a17e3d736c",
+    "NavBar.Language": "a4fe65264ef7dbb38d104b1e81eb3350f3142f3d16f32bdec39b1d9b42c1b8d1",
+    "NavBar.Projects": "04e2a9728af7584043c5d58ae29e7cd811883e8dab15fc6287675270669a3ada",
+    "ProjectInfo.BackToProjects": "d9088c8aee0118cbc5f36d530001d9c73b9ac7187e02edebb05f322b61ec0ca0",
+    "ProjectInfo.CodeButton": "340f463033e0fd5ddeabb922df4d4f1b5747494d0f5ed9894f13b6e13ca831f5",
+    "ProjectInfo.NotFound": "ca4e75ac8b5aa2d713bb2babb7b3801ba06e1c6cd990cda012491ad3b72bc6b9",
+    "ProjectInfo.Stack": "5ed3baab833bd4fcf82c4bc93dea8cf32bec46c9065dec8ca132ba6a9b69b7ec",
+    "ProjectInfo.Summary": "34c863b318b5fff4854be4f978a4afda481db44152c20504d99e1de84b948d59",
+    "ProjectInfo.VisitButton": "1c8ac867f052ea4adb4598c4e3789bbf7b5f758cc7ebab7cfe746f180f43f91e",
+    "Projects.CountLabel": "6be5d28ec87155d2da5ddf89fc411c33b599cd8fee52ee3cadd4d277832c5358",
+    "Projects.Title": "04e2a9728af7584043c5d58ae29e7cd811883e8dab15fc6287675270669a3ada"
+  }
+}

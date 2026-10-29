@@ -1,22 +1,27 @@
 import { dedupeAllowlist, screenshotPath } from "@/lib/projects";
 import type { AllowlistEntry } from "@/lib/projects";
-import type { FileStore, ScreenshotSource, ScreenshotsReport, SyncReport } from "@/lib/sync/types";
+import { syncTranslations } from "@/lib/sync/translations";
+import type { FileStore, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps } from "@/lib/sync/types";
 
-export type { FileStore, ScreenshotSource, ScreenshotsReport, SyncReport } from "@/lib/sync/types";
+export type { DictionaryLocaleReport, FileStore, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
 
 export type SyncDeps = {
     github: ScreenshotSource;
     store: FileStore;
     /** Only these repos are ever read or written; any other repo is Hidden. */
     allowlist: AllowlistEntry[];
+    /** The Translations step. Without it Sync only copies Screenshots. */
+    translations?: TranslationsDeps;
 };
 
 /**
- * The Sync job. Each step reports into its own key of the SyncReport, so a
- * later step (Translations) is a new optional dependency plus a new report key.
+ * The Sync job. Each step reports into its own key of the SyncReport: Screenshots,
+ * then, when `translations` is given, the Dictionary Translations. A step that
+ * fails does not stop the other.
  */
 export async function runSync(deps: SyncDeps): Promise<SyncReport> {
-    return { screenshots: await copyScreenshots(deps) };
+    const screenshots = await copyScreenshots(deps);
+    return deps.translations ? { screenshots, translations: await syncTranslations(deps.translations) } : { screenshots };
 }
 
 async function copyScreenshots({ github, store, allowlist }: SyncDeps): Promise<ScreenshotsReport> {

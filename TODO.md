@@ -9,7 +9,7 @@ Summary of `.scratch/`. Source of truth is each ticket's `Status:` and `Blocked 
 
 ## Tickets (github-sourced-portfolio)
 
-All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13 and 14 are `done`; 06 is `ready-for-human`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
+All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13, 14 and 15 are `done`; 06 is `ready-for-human`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
 
 | # | Ticket | Blocked by | Bug sweep |
 |---|---|---|---|
@@ -27,15 +27,16 @@ All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07, 08, 09, 10, 12, 13 a
 | 12 | Language switcher dropdown (`done`) | 09 | |
 | 13 | Profile links module with accessible names (`done`) | 10 | 8 |
 | 14 | Accessible theme toggle (`done`) | 10 | 8 |
-| 15 | Translator module and Sync translates the Dictionary | 07, 10, 11 | |
+| 15 | Translator module and Sync translates the Dictionary (`done`) | 07, 10, 11 | |
 | 16 | Project summary Translations | 03, 15 | |
 
 ## Start here
 
-01 to 05, 07 to 14 are done. 06 is done apart from the owner's check on the deployed site. 11 is done. Next: 15, then 16.
+01 to 05, 07 to 15 are done. 06 is done apart from the owner's check on the deployed site. Next: 16.
 
 ## Human steps
 
 - 03: add the repos to show to `projects.allowlist.ts` and set `GITHUB_TOKEN` (fine-grained, read-only metadata and contents, limited to those repos) in the deploy environment. Add `<!-- portfolio:start -->` / `<!-- portfolio:end -->` to each README.
 - 06: on the deployed site, set `REVALIDATE_KEY`, edit a README or description, then `curl -X POST https://<site>/api/revalidate -H 'x-revalidate-key: <key>'` and confirm both Locales' list and Project pages show the change. Switch any existing caller from the deprecated `revalidate_key` header to `x-revalidate-key` (nginx drops underscore headers by default). Not verifiable from the repo.
 - 07: commit a PNG at `docs/screenshot.png` in each repo to show, then run `GITHUB_TOKEN=... pnpm sync` and commit the new files in `public/screenshots/`. Not run against real GitHub yet.
+- 15: to generate or refresh Translations, set `GEMINI_API_KEY` (free key, Google AI Studio) or `TRANSLATOR=libretranslate` and run `pnpm sync`; review and commit `dictionary/`. Not run against the real Gemini API (no key exists yet); the default model `gemini-3.5-flash-lite` came from Google's docs and may need `GEMINI_MODEL`.
