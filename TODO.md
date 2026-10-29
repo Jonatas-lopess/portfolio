@@ -9,7 +9,7 @@ Summary of `.scratch/`. Source of truth is each ticket's `Status:` and `Blocked 
 
 ## Tickets (github-sourced-portfolio)
 
-All `ready-for-agent` unless noted (01, 02, 03, 04, 05 and 09 are `done`; 06 is `ready-for-human`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
+All `ready-for-agent` unless noted (01, 02, 03, 04, 05, 07 and 09 are `done`; 06 is `ready-for-human`). Numbers are ticket files in `.scratch/github-sourced-portfolio/issues/`.
 
 | # | Ticket | Blocked by | Bug sweep |
 |---|---|---|---|
@@ -19,7 +19,7 @@ All `ready-for-agent` unless noted (01, 02, 03, 04, 05 and 09 are `done`; 06 is 
 | 04 | Remove Supabase (`done`) | 03 | 3, 11 |
 | 05 | Upgrade Next to a patched version (`done`, Next 15.5.28) | 01, 04 | 2 |
 | 06 | Revalidation covers the Locale pages and project pages (`ready-for-human`: code done, deployed-site check left) | 03 | 10 |
-| 07 | Sync job copies Screenshots | 03 | |
+| 07 | Sync job copies Screenshots (`done`) | 03 | |
 | 08 | Project index with React hover state | 03, 09 | 6 |
 | 09 | Locale module (`done`) | 02 | 5 |
 | 10 | Dictionary: typed English source with every string moved in | 09 | 7, 9 |
@@ -32,10 +32,11 @@ All `ready-for-agent` unless noted (01, 02, 03, 04, 05 and 09 are `done`; 06 is 
 
 ## Start here
 
-01, 02, 03, 04, 05 and 09 are done. 06 is done apart from the owner's check on the deployed site. Next: 07, 08, 10 and 12 (all unblocked).
+01, 02, 03, 04, 05, 07 and 09 are done. 06 is done apart from the owner's check on the deployed site. Next: 08, 10 and 12 (all unblocked).
 
 ## Human steps
 
 - 03: add the repos to show to `projects.allowlist.ts` and set `GITHUB_TOKEN` (fine-grained, read-only metadata and contents, limited to those repos) in the deploy environment. Add `<!-- portfolio:start -->` / `<!-- portfolio:end -->` to each README.
 - 06: on the deployed site, set `REVALIDATE_KEY`, edit a README or description, then `curl -X POST https://<site>/api/revalidate -H 'x-revalidate-key: <key>'` and confirm both Locales' list and Project pages show the change. Switch any existing caller from the deprecated `revalidate_key` header to `x-revalidate-key` (nginx drops underscore headers by default). Not verifiable from the repo.
 - 11: approve the proofread English bio (blocks 15 and so 16).
+- 07: commit a PNG at `docs/screenshot.png` in each repo to show, then run `GITHUB_TOKEN=... pnpm sync` and commit the new files in `public/screenshots/`. Not run against real GitHub yet.

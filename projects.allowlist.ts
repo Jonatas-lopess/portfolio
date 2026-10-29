@@ -18,6 +18,9 @@ export const githubOwner = "Jonatas-lopess";
  *   { repo: "my-public-app", visibility: "full" },
  *   { repo: "client-dashboard", title: "Client Dashboard" },
  *
+ * A Project's Screenshot is `docs/screenshot.png` in its repo; `pnpm sync` copies it to
+ * `public/screenshots/<repo>.png`.
+ *
  * The site reads each repo with the server-only GITHUB_TOKEN, which must have
  * read access (metadata and contents) to every repo listed here.
  */

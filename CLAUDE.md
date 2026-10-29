@@ -11,10 +11,11 @@ Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tail
 - `pnpm build` / `pnpm start` — production build / serve
 - `pnpm lint` — `next lint` (`next/core-web-vitals`)
 - `pnpm test` — `vitest run` (no network needed)
+- `pnpm sync` — the owner-run Sync job (`scripts/sync.ts`, run with `tsx`, which resolves the `@/` alias): copies each Allowlisted Project's Screenshot into `public/screenshots/`. Needs `GITHUB_TOKEN`; review with `git status` / `git diff`, then commit the images.
 
 pnpm is the single package manager (pinned via `packageManager` in `package.json`); `pnpm-lock.yaml` is the only lockfile. Do not add `package-lock.json` or `yarn.lock`. `pnpm-workspace.yaml` only holds `allowBuilds` (pnpm 11 blocks dependency install scripts by default; `unrs-resolver` is set to `false`).
 
-Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional `GITHUB_API_URL` override), `REVALIDATE_KEY` (checked by the revalidate route). No `.env*` file is in the repo.
+Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts` and `pnpm sync`; optional `GITHUB_API_URL` override, honoured by both), `REVALIDATE_KEY` (checked by the revalidate route). No `.env*` file is in the repo.
 
 ## Architecture
 
@@ -28,6 +29,8 @@ Env vars: `GITHUB_TOKEN` (server-only, read by `lib/projects/live.ts`; optional 
 - `projects/page.tsx` renders every Project's image stacked at `opacity-0`, with a placeholder when there is no Screenshot.
 - `ListItem` (client component) reveals the image on hover by querying `#list-images img[alt="<lowercased li text>"]`, so the image's `alt` must equal the lowercased project title. Don't change the alt text or the list markup in one place without the other.
 - `projects/[projectName]/page.tsx` fetches a single project by slug and calls `notFound()` if absent.
+
+**Sync job (`lib/sync/`).** `runSync({ github, store, allowlist })` returns `{ screenshots: { copied, unchanged, skipped, failed } }` (repo names; `failed` entries carry `{ repo, error }`). `github` is a `ScreenshotSource` (`getScreenshot(repo)` gives bytes or null) and `store` a `FileStore` (`read`/`write` by public path). It only touches Allowlisted repos, so a Hidden repo's image is never fetched or copied. The fixed Screenshot path in each Project's repo is **`docs/screenshot.png`** (`SCREENSHOT_REPO_PATH` in `lib/sync/github-screenshots.ts`; must be a PNG). It is written to `public/screenshots/<repo>.png`; the name always comes from `screenshotPath` in `lib/projects`, the same function `screenshotExists` uses to decide whether the site shows it or the placeholder. Identical bytes are not rewritten (compared by content), a repo without the file is skipped and reported, and one repo's failure (for example a 403) does not stop the others; `pnpm sync` exits 1 if any failed. Error messages never include the token. Real adapters: `createGitHubScreenshots` (contents API, `Accept: application/vnd.github.raw+json`, no Next fetch cache) and `createFileStore` (rooted at `public/`); `createMemoryStore` is for tests. A later step (Translations, ticket 15) is a new optional dependency on `SyncDeps` plus a new key on `SyncReport`; `scripts/sync.ts` wires and prints it.
 
 **Cache invalidation.** Every GitHub fetch in `lib/projects/github.ts` carries `next: { revalidate: 3600, tags: ["projects"] }`. `POST /api/revalidate` (key in the `x-revalidate-key` header, compared in constant time with `REVALIDATE_KEY`; 401 if missing, wrong, or `REVALIDATE_KEY` is unset) calls `revalidateTag("projects")` and `revalidatePath` for each concrete `/{locale}/projects` and `/{locale}/projects/{slug}` (locales from `lib/locale`, slugs from `listSlugs()`). Do not pass `"/[lang]/projects"` to `revalidatePath`: a dynamic pattern without a `type` has no effect. The old header name `revalidate_key` is still accepted but deprecated (the underscore is dropped by nginx by default); new callers use `x-revalidate-key`.
 
