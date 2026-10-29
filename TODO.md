@@ -5,6 +5,7 @@ Summary of `.scratch/`. Source of truth is each ticket's `Status:` and `Blocked 
 ## Efforts
 
 - **github-sourced-portfolio** (`.scratch/github-sourced-portfolio/`): read Projects from GitHub instead of Supabase, add generated multi-locale support. Spec in `spec.md`, decisions in `docs/adr/`, vocabulary in `GLOSSARY.md`.
+- **new-layout** (`.scratch/new-layout/`): the owner's redesign of the header, the Projects listing and the Project page. Spec in `spec.md`, mockups in `designs/`.
 - **bug-sweep** (`.scratch/bug-sweep/findings.md`): 12 findings from a 2026-10-29 sweep. No tickets of its own; every finding is folded into the tickets above (map at the bottom of `findings.md`).
 
 ## Tickets (github-sourced-portfolio)
@@ -30,9 +31,21 @@ All `ready-for-agent` unless noted (all are `done` except 06, which is `ready-fo
 | 15 | Translator module and Sync translates the Dictionary (`done`) | 07, 10, 11 | |
 | 16 | Project summary Translations (`done`) | 03, 15 | |
 
+## Tickets (new-layout)
+
+All `ready-for-agent`. Numbers are ticket files in `.scratch/new-layout/issues/`.
+
+| # | Ticket | Blocked by |
+|---|---|---|
+| 01 | Site header restyle | none |
+| 02 | Project tagline (translated repo description) | none |
+| 03 | Projects listing page | 01, 02 |
+| 04 | Project page layout | 01, 02 |
+| 05 | Typographic Project cover | 04 |
+
 ## Start here
 
-All tickets are done. 06 is done apart from the owner's check on the deployed site (see Human steps). Nothing else is queued.
+All github-sourced-portfolio tickets are done; new-layout starts at 01 and 02 (no blockers). 06 is done apart from the owner's check on the deployed site (see Human steps). 
 
 ## Human steps
 
