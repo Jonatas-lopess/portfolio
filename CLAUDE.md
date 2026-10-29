@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tailwind (class-based dark mode) and Supabase. No test runner is configured.
+Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tailwind (class-based dark mode) and Supabase. Tests use Vitest (`@/*` alias resolved in `vitest.config.ts`).
 
 ## Commands
 
@@ -10,6 +10,7 @@ Bilingual (en / pt-BR) personal portfolio built on Next.js 13.4 App Router, Tail
 - `pnpm dev` — dev server
 - `pnpm build` / `pnpm start` — production build / serve
 - `pnpm lint` — `next lint` (`next/core-web-vitals`)
+- `pnpm test` — `vitest run` (no network needed)
 
 pnpm is the single package manager (pinned via `packageManager` in `package.json`); `pnpm-lock.yaml` is the only lockfile. Do not add `package-lock.json` or `yarn.lock`. `pnpm-workspace.yaml` only holds `allowBuilds` (pnpm 11 blocks dependency install scripts by default; `supabase` and `unrs-resolver` are set to `false`, so the Supabase CLI binary is not downloaded and `node_modules/.bin/supabase` is absent).
 
