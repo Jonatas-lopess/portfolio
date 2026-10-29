@@ -40,7 +40,7 @@ export default function ProjectCover({ title, screenshot, label, position, total
             <figure>
                 <div className={frame}>
                     <Image
-                        alt={title}
+                        alt=""
                         src={screenshot}
                         fill
                         sizes="(min-width: 768px) 60vw, 100vw"

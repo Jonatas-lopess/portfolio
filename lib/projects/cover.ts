@@ -1,3 +1,5 @@
+import { padNumber } from "@/lib/project-index";
+
 /** Pure helpers behind the generated typographic Project cover. Nothing here is per Project: all text comes from the title, the position and the topics. */
 
 export type CoverTitle = {
@@ -22,8 +24,6 @@ export type CoverLabels = {
     bottomRight: string | null;
 };
 
-const pad = (n: number) => String(n).padStart(2, "0");
-
 export function coverLabels({ title, position, total, topics }: {
     title: string;
     /** 1-based place among the listed Projects. */
@@ -33,7 +33,7 @@ export function coverLabels({ title, position, total, topics }: {
 }): CoverLabels {
     return {
         topLeft: title,
-        topRight: `${pad(position)}–${pad(total)}`,
+        topRight: `${padNumber(position)}–${padNumber(total)}`,
         bottomLeft: topics.length > 0 ? topics.slice(0, 2).join(" / ") : null,
         bottomRight: topics[2] ?? null,
     };

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import ProjectCover from "@/components/ProjectCover"
 import { projects } from "@/lib/projects/live"
 import { projectNavigation } from "@/lib/projects/navigation"
+import { padNumber } from "@/lib/project-index"
 import { getDictionary, type Locale, locales, localePath } from "@/lib/locale"
 
 export const revalidate = 3600
@@ -10,8 +11,6 @@ export const revalidate = 3600
 export function generateStaticParams() {
     return locales.flatMap((lang) => projects.listSlugs().map((projectName) => ({ lang, projectName })))
 }
-
-const pad = (n: number) => String(n).padStart(2, "0")
 
 const mono = "font-mono text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400"
 const buttonBase = "px-12 py-3 rounded text-white"
@@ -21,13 +20,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
     const locale = lang as Locale // middleware guarantees a valid Locale prefix
     const dictionary = getDictionary(locale)
     const text = dictionary.Project
-    const all = await projects.listProjects(locale)
-    const navigation = projectNavigation(all.map((p) => p.slug), projectName)
+    const navigation = projectNavigation(projects.listSlugs(), projectName)
 
     if (!navigation) notFound()
 
-    const project = all[navigation.position - 1]
-    const next = navigation.next === null ? null : all[navigation.position % all.length]
+    // Only the current and the next Project are read, so one unreadable repo cannot fail every Project page.
+    const project = await projects.getProject(projectName, locale)
+    if (!project) notFound()
+    const next = navigation.next === null ? null : await projects.getProject(navigation.next, locale)
+    // Without a Marked block the summary falls back to the description, which is also the tagline: show it once.
+    const tagline = project.tagline && project.tagline !== project.summary ? project.tagline : null
     const allProjectsHref = localePath(locale, "/projects")
 
     return (
@@ -37,13 +39,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
                     <span aria-hidden="true">←</span>
                     {text.AllProjects}
                 </Link>
-                <p className={mono}>{text.Label} {pad(navigation.position)} / {pad(navigation.total)}</p>
+                <p className={mono}>{text.Label} {padNumber(navigation.position)} / {padNumber(navigation.total)}</p>
             </div>
 
             <div className="flex flex-col justify-between gap-6 border-b border-black/10 py-10 dark:border-white/15 md:flex-row md:items-end md:py-14">
                 <h1 className="break-words text-5xl font-medium leading-none tracking-tight sm:text-7xl lg:text-8xl">{project.title}</h1>
-                {project.tagline && (
-                    <p className="max-w-xs text-lg text-gray-600 dark:text-gray-300 md:pb-2 md:text-xl">{project.tagline}</p>
+                {tagline && (
+                    <p className="max-w-xs text-lg text-gray-600 dark:text-gray-300 md:pb-2 md:text-xl">{tagline}</p>
                 )}
             </div>
 
@@ -85,7 +87,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ lang: 
                 <div className="flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
                     <p className={mono}>{text.ContinueExploring}</p>
                     <Link href={localePath(locale, `/projects/${encodeURIComponent(next.slug)}`)} className="flex items-center gap-4 hover:underline sm:gap-6">
-                        <span className={mono}>{text.Next} / {pad(navigation.position % navigation.total + 1)}</span>
+                        <span className={mono}>{text.Next} / {padNumber(navigation.nextPosition ?? 1)}</span>
                         <span className="break-words text-2xl md:text-4xl">{next.title}</span>
                         <span aria-hidden="true" className="text-2xl">→</span>
                     </Link>
