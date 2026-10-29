@@ -16,9 +16,8 @@ export default async function Projects({ params }: { params: Promise<{ lang: str
     return (
         <ProjectIndex
             locale={locale}
-            heading={dictionary.Projects.Title}
-            countLabel={dictionary.Projects.CountLabel}
-            projects={list.map((p) => ({ slug: p.slug, title: p.title, screenshot: p.screenshot }))}
+            labels={dictionary.Projects}
+            projects={list.map((p) => ({ slug: p.slug, title: p.title, tagline: p.tagline }))}
         />
     )
 }

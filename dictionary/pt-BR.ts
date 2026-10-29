@@ -23,7 +23,14 @@ export const ptBR: DictionaryEntry = {
     },
     Projects: {
         Title: "Projetos",
-        CountLabel: "Número de projetos"
+        CountLabel: "Número de projetos",
+        Breadcrumb: "Portfólio / Trabalhos selecionados",
+        Intro: "Uma seleção de projetos, das ideias ao software funcionando.",
+        IndexLabel: "Índice de projetos",
+        Explore: "Explore os trabalhos",
+        ViewProject: "Ver projeto",
+        FooterBreadcrumb: "Portfólio / Projetos",
+        BackToTop: "Voltar ao topo"
     },
     ProjectInfo: {
         Summary: "Resumo",
@@ -32,5 +39,12 @@ export const ptBR: DictionaryEntry = {
         VisitButton: "Visitar",
         NotFound: "Projeto não encontrado.",
         BackToProjects: "Voltar aos projetos"
+    },
+    Project: {
+        Label: "Projeto",
+        AllProjects: "Todos os projetos",
+        ContinueExploring: "Continue explorando",
+        Next: "Próximo",
+        CoverLabel: "Capa do projeto"
     }
 };

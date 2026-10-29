@@ -33,19 +33,19 @@ All `ready-for-agent` unless noted (all are `done` except 06, which is `ready-fo
 
 ## Tickets (new-layout)
 
-All `ready-for-agent` except 02 (`done`). Numbers are ticket files in `.scratch/new-layout/issues/`.
+Tickets 02 to 05 are `done`; 01 is committed. Numbers are ticket files in `.scratch/new-layout/issues/`.
 
 | # | Ticket | Blocked by |
 |---|---|---|
 | 01 | Site header restyle | none |
 | 02 | Project tagline (translated repo description) (`done`) | none |
-| 03 | Projects listing page | 01, 02 |
-| 04 | Project page layout | 01, 02 |
-| 05 | Typographic Project cover | 04 |
+| 03 | Projects listing page (`done`) | 01, 02 |
+| 04 | Project page layout (`done`; `pnpm build` not run) | 01, 02 |
+| 05 | Typographic Project cover (`done`; `pnpm build` not run) | 04 |
 
 ## Start here
 
-All github-sourced-portfolio tickets are done; new-layout: 02 is done, 01 has no blockers, 03 and 04 wait for 01. 06 is done apart from the owner's check on the deployed site (see Human steps). 
+All github-sourced-portfolio tickets are done; new-layout: 01 to 05 are done (build not run for 03 to 05). 06 is done apart from the owner's check on the deployed site (see Human steps). 
 
 ## Human steps
 

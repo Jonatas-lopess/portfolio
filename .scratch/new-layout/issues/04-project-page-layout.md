@@ -6,15 +6,15 @@
 
 **Blocked by:** 01: Site header restyle, 02: Project tagline (translated repo description)
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Layout matches the mockup (back link and position, hero, two columns, chips, "Continue exploring" row, bottom bar with the Project name and "All projects")
-- [ ] The position is the Project's place in Allowlist order out of the total; "Next" is the following Project and wraps from the last to the first; with a single Project the next link is omitted
-- [ ] Code and Visit buttons appear in the summary column only when the Project has a code URL / demo URL (a Project with neither shows none), keeping their current rules (code link only for `full` visibility and a public repo)
-- [ ] A Project without a tagline or without stack topics omits that element without leaving an empty block
-- [ ] An unknown slug still gives the translated not-found state (`notFound()`), and links use `localePath`
-- [ ] The cover slot shows the Screenshot when there is one and `SCREENSHOT_PLACEHOLDER` otherwise (replaced in ticket 05)
-- [ ] New strings are in `en.ts` and every other Locale file (via `pnpm sync`, then reviewed); the Dictionary parity test passes
-- [ ] Light theme and widths below `md` (columns stack) are usable
-- [ ] Tests cover position / next (including wrap and single Project); `CLAUDE.md` Project page notes and `TODO.md` are updated
+- [x] Layout matches the mockup (back link and position, hero, two columns, chips, "Continue exploring" row, bottom bar with the Project name and "All projects")
+- [x] The position is the Project's place in Allowlist order out of the total; "Next" is the following Project and wraps from the last to the first; with a single Project the next link is omitted
+- [x] Code and Visit buttons appear in the summary column only when the Project has a code URL / demo URL (a Project with neither shows none), keeping their current rules (code link only for `full` visibility and a public repo)
+- [x] A Project without a tagline or without stack topics omits that element without leaving an empty block
+- [x] An unknown slug still gives the translated not-found state (`notFound()`), and links use `localePath`
+- [x] The cover slot shows the Screenshot when there is one and `SCREENSHOT_PLACEHOLDER` otherwise (replaced in ticket 05)
+- [x] New strings are in `en.ts` and every other Locale file (via `pnpm sync`, then reviewed); the Dictionary parity test passes
+- [x] Light theme and widths below `md` (columns stack) are usable
+- [x] Tests cover position / next (including wrap and single Project); `CLAUDE.md` Project page notes and `TODO.md` are updated
 - [ ] `pnpm lint`, `pnpm test`, `pnpm exec tsc --noEmit` and `pnpm build` pass

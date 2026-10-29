@@ -27,7 +27,14 @@ export const en = {
     },
     Projects: {
         Title: "Projects",
-        CountLabel: "Number of projects"
+        CountLabel: "Number of projects",
+        Breadcrumb: "Portfolio / Selected work",
+        Intro: "A selection of projects, from ideas to working software.",
+        IndexLabel: "Project index",
+        Explore: "Explore the work",
+        ViewProject: "View project",
+        FooterBreadcrumb: "Portfolio / Projects",
+        BackToTop: "Back to top"
     },
     ProjectInfo: {
         Summary: "Project summary",
@@ -36,6 +43,13 @@ export const en = {
         VisitButton: "Visit",
         NotFound: "Project not found.",
         BackToProjects: "Back to projects"
+    },
+    Project: {
+        Label: "Project",
+        AllProjects: "All projects",
+        ContinueExploring: "Continue exploring",
+        Next: "Next",
+        CoverLabel: "Project cover"
     }
 };
 
