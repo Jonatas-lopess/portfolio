@@ -33,5 +33,5 @@ export const allowlist: AllowlistEntry[] = [
     { repo: "erp_project", title: "SIGA Erp" },
     { repo: "ai_harness", visibility: "full" },
     { repo: "legal_manager", title: "Legal Manager" },
-    { repo: "projeto_ebd", title: "Ebd App" },
+    { repo: "project-ebd", title: "Ebd App" },
 ];

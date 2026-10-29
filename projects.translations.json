@@ -1,1 +1,26 @@
-{}
+{
+  "ai_harness": {
+    "pt-BR": {
+      "text": "Uma biblioteca compartilhada (**harness**) mais dois pacotes de domínio independentes — **ERP** e **Legal** — para a construção de assistentes de IA sobre sistemas empresariais. Construído de forma incremental como um projeto de aprendizado em engenharia de IA.",
+      "sourceHash": "4734089c6defb2aef7aad906b459dd0742a6ad99c86b405726bfad9cb82763fb"
+    }
+  },
+  "erp_project": {
+    "pt-BR": {
+      "text": "ERP modular offline-first para o varejo brasileiro, construído como um aplicativo de desktop sincronizado via LAN (Tauri v2 + React). Entregue domínio por domínio, escopado para um cliente real em vez de um conjunto de recursos genérico.",
+      "sourceHash": "c5335e227442247d4a7c972041f8df488aa34d4aba1913a2b7f2a173d747c941"
+    }
+  },
+  "legal_manager": {
+    "pt-BR": {
+      "text": "SaaS multi-tenant de gestão para escritórios de advocacia. MVP foca em Controle de Clientes, Controle de Matters (catálogo personalizado), Gestão de Prazos (motor de contagem — diferencial do produto) e relatórios operacionais de prazo.",
+      "sourceHash": "8d73f709ba6d2c4ff878f329f7d1dcd2371dced0f0c444fffede414ca8e20a40"
+    }
+  },
+  "project-ebd": {
+    "pt-BR": {
+      "text": "Sistema de gerenciamento multilocatário para Escolas Bíblicas Dominicais de igrejas. Um painel administrativo web gerencia turmas, alunos, lições e cobrança; um aplicativo móvel com funcionamento prioritário offline permite que os professores façam a chamada e registrem notas na sala de aula, sincronizando posteriormente.",
+      "sourceHash": "24e987008d37078c67734617772581f60c1c8ece1d1befe3bd2b4b523bab9c51"
+    }
+  }
+}
