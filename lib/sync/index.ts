@@ -2,7 +2,7 @@ import { dedupeAllowlist, screenshotPath } from "@/lib/projects";
 import type { AllowlistEntry } from "@/lib/projects";
 import { syncProjectTranslations } from "@/lib/sync/project-translations";
 import { syncTranslations } from "@/lib/sync/translations";
-import type { FileStore, ProjectTranslationsDeps, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps } from "@/lib/sync/types";
+import type { FileStore, ProjectTranslationsDeps, ProjectTranslationsReport, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
 
 export type { DictionaryLocaleReport, FileStore, ProjectTranslationRef, ProjectTranslationsDeps, ProjectTranslationsReport, ReadmeSource, ScreenshotSource, ScreenshotsReport, SyncReport, TranslationsDeps, TranslationsReport } from "@/lib/sync/types";
 
@@ -19,13 +19,46 @@ export type SyncDeps = {
 
 /**
  * The Sync job. Each step reports into its own key of the SyncReport: Screenshots,
- * then, when given, the Dictionary Translations and the Project summary Translations. A step that
- * fails does not stop the other.
+ * then, when given, the Dictionary Translations and the Project summary Translations.
+ * Steps are isolated: one that rejects is recorded as a failure under its own key (entry
+ * `(step)`) and the others still run and keep their reports.
  */
 export async function runSync(deps: SyncDeps): Promise<SyncReport> {
-    const report: SyncReport = { screenshots: await copyScreenshots(deps) };
-    if (deps.translations) report.translations = await syncTranslations(deps.translations);
-    if (deps.projectTranslations) report.projectTranslations = await syncProjectTranslations(deps.projectTranslations, deps.allowlist);
+    const message = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
+    const report: SyncReport = {
+        screenshots: await copyScreenshots(deps).catch((error): ScreenshotsReport => ({
+            copied: [],
+            unchanged: [],
+            skipped: [],
+            failed: [{ repo: "(step)", error: message(error) }],
+        })),
+    };
+    if (deps.translations) {
+        report.translations = await syncTranslations(deps.translations).catch((error): TranslationsReport => ({
+            "(step)": {
+                created: false,
+                generated: [],
+                regenerated: [],
+                stale: [],
+                baselined: [],
+                unchanged: [],
+                failed: [{ path: "(step)", error: message(error) }],
+                registry: "skipped",
+            },
+        }));
+    }
+    if (deps.projectTranslations) {
+        report.projectTranslations = await syncProjectTranslations(deps.projectTranslations, deps.allowlist).catch((error): ProjectTranslationsReport => ({
+            generated: [],
+            regenerated: [],
+            stale: [],
+            unchanged: [],
+            skipped: [],
+            pruned: [],
+            failed: [{ repo: "(step)", error: message(error) }],
+        }));
+    }
     return report;
 }
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { runSync } from "@/lib/sync";
 import { createMemoryStore } from "@/lib/sync/in-memory";
+import { createFakeTranslator } from "@/lib/translator/fake";
 import type { ScreenshotSource } from "@/lib/sync";
 
 /** Stand-in image bytes; Sync never decodes them, it only copies and compares. */
@@ -124,5 +125,70 @@ describe("Sync copies Screenshots", () => {
 
         expect(github.asked).toEqual(["alpha"]);
         expect(Array.from(store.files.keys())).toEqual(["/screenshots/alpha.png"]);
+    });
+});
+
+describe("Sync isolates its optional steps", () => {
+    /** A step whose configuration blows up before it can report anything per entry. */
+    const brokenLocales = (): readonly string[] => {
+        throw new Error("locales exploded");
+    };
+    const translator = createFakeTranslator();
+    const readmes = { getReadme: async () => "# T\n<!-- portfolio:start -->\nAlpha.\n<!-- portfolio:end -->\n" };
+
+    it("records a rejected Dictionary step under translations and still runs the others", async () => {
+        const store = createMemoryStore();
+        const projectStore = createMemoryStore();
+        const report = await runSync({
+            github: fakeScreenshots({ alpha: png("a") }),
+            store,
+            allowlist: [{ repo: "alpha" }],
+            translations: { translator, store: createMemoryStore(), source: {}, sourceLocale: "en", get locales() { return brokenLocales(); } },
+            projectTranslations: { translator, readmes, store: projectStore, sourceLocale: "en", locales: ["pt-BR"] },
+        });
+
+        expect(report.translations).toEqual({
+            "(step)": expect.objectContaining({ failed: [{ path: "(step)", error: "locales exploded" }] }),
+        });
+        expect(report.screenshots.copied).toEqual(["alpha"]);
+        expect(report.projectTranslations!.generated).toEqual([{ repo: "alpha", locale: "pt-BR" }]);
+        expect(report.projectTranslations!.failed).toEqual([]);
+    });
+
+    it("records a rejected Project summaries step under projectTranslations and keeps the other reports", async () => {
+        const report = await runSync({
+            github: fakeScreenshots({ alpha: png("a") }),
+            store: createMemoryStore(),
+            allowlist: [{ repo: "alpha" }],
+            translations: { translator, store: createMemoryStore(), source: { Title: "Title" }, sourceLocale: "en", locales: ["es"] },
+            projectTranslations: { translator, readmes, store: createMemoryStore(), sourceLocale: "en", get locales() { return brokenLocales(); } },
+        });
+
+        expect(report.projectTranslations!.failed).toEqual([{ repo: "(step)", error: "locales exploded" }]);
+        expect(report.screenshots.copied).toEqual(["alpha"]);
+        expect(report.translations!.es.generated).toEqual(["Title"]);
+    });
+
+    it("records a rejected Screenshots step under screenshots and still runs the others", async () => {
+        const allowlist = [{ repo: "alpha" }];
+        let reads = 0;
+        // dedupeAllowlist (screenshots) and the Project summaries step both read the Allowlist; fail only the first read.
+        const flaky = new Proxy(allowlist, {
+            get(target, key, receiver) {
+                if (key === "filter" && reads++ === 0) throw new Error("allowlist exploded");
+                return Reflect.get(target, key, receiver);
+            },
+        });
+        const report = await runSync({
+            github: fakeScreenshots({ alpha: png("a") }),
+            store: createMemoryStore(),
+            allowlist: flaky,
+            translations: { translator, store: createMemoryStore(), source: { Title: "Title" }, sourceLocale: "en", locales: ["es"] },
+            projectTranslations: { translator, readmes, store: createMemoryStore(), sourceLocale: "en", locales: ["pt-BR"] },
+        });
+
+        expect(report.screenshots.failed).toEqual([{ repo: "(step)", error: "allowlist exploded" }]);
+        expect(report.translations!.es.generated).toEqual(["Title"]);
+        expect(report.projectTranslations!.generated).toEqual([{ repo: "alpha", locale: "pt-BR" }]);
     });
 });

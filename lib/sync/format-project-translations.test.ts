@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { formatProjectTranslationsReport } from "@/lib/sync/format-project-translations";
 import type { ProjectTranslationsReport } from "@/lib/sync/types";
 
-const empty: ProjectTranslationsReport = { generated: [], regenerated: [], stale: [], unchanged: [], skipped: [], orphaned: [], failed: [] };
+const empty: ProjectTranslationsReport = { generated: [], regenerated: [], stale: [], unchanged: [], skipped: [], pruned: [], failed: [] };
 
 describe("the Project summaries report as text", () => {
     it("says there is nothing to translate for an empty Allowlist", () => {
@@ -11,7 +11,18 @@ describe("the Project summaries report as text", () => {
         expect(lines.join("\n")).toMatch(/Allowlist is empty.*nothing to translate/);
     });
 
-    it("lists generated, unchanged, skipped and orphaned entries", () => {
+    it("still reports pruned entries when the Allowlist is empty", () => {
+        const { lines } = formatProjectTranslationsReport({ ...empty, pruned: ["gone"] }, 0);
+        expect(lines.join("\n")).toMatch(/pruned.*gone/);
+    });
+
+    it("counts a failure even when the Allowlist is empty (e.g. an unreadable stored file)", () => {
+        const { lines, failures } = formatProjectTranslationsReport({ ...empty, failed: [{ repo: "(file)", error: "bad json" }] }, 0);
+        expect(failures).toBe(1);
+        expect(lines.join("\n")).toContain("bad json");
+    });
+
+    it("lists generated, unchanged, skipped and pruned entries", () => {
         const { lines } = formatProjectTranslationsReport(
             {
                 ...empty,
@@ -19,7 +30,7 @@ describe("the Project summaries report as text", () => {
                 regenerated: [{ repo: "b", locale: "pt-BR" }],
                 unchanged: [{ repo: "c", locale: "pt-BR" }],
                 skipped: ["d"],
-                orphaned: ["gone"],
+                pruned: ["gone"],
             },
             4,
         );
@@ -28,7 +39,7 @@ describe("the Project summaries report as text", () => {
         expect(text).toContain("regenerated: b (pt-BR)");
         expect(text).toContain("unchanged:   1");
         expect(text).toMatch(/skipped \(no Marked block.*\): d/);
-        expect(text).toMatch(/not on the Allowlist.*gone/);
+        expect(text).toMatch(/pruned.*not on the Allowlist.*gone/);
     });
 
     it("names the flag next to Stale entries and tells apart an unknown hash", () => {

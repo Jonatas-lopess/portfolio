@@ -297,3 +297,62 @@ describe("Sync without a Translator configured", () => {
         expect(report.translations).toBeUndefined();
     });
 });
+
+/** The store, but a read or a write of the given path rejects. */
+function failing(store: ReturnType<typeof createMemoryStore>, when: { read?: string; write?: string; writeAfter?: number }) {
+    const read = store.read.bind(store);
+    const write = store.write.bind(store);
+    let writesToPath = 0;
+    store.read = async (path) => {
+        if (path === when.read) throw new Error("disk unreadable");
+        return read(path);
+    };
+    store.write = async (path, bytes) => {
+        if (path === when.write && writesToPath++ >= (when.writeAfter ?? 0)) throw new Error("disk full");
+        return write(path, bytes);
+    };
+    return store;
+}
+
+describe("Sync when the state file cannot be read or written", () => {
+    it("reports (state) as failed for every Locale when the state cannot be read, and writes nothing", async () => {
+        const store = failing(repo({ "/dictionary/pt-BR.ts": ptFile(), [SYNC_STATE_PATH]: JSON.stringify(ptState()) }), { read: SYNC_STATE_PATH });
+        const { report, translator } = await sync({ store, locales: ["pt-BR", "es"] });
+
+        expect(report.translations!["pt-BR"].failed).toEqual([{ path: "(state)", error: "disk unreadable" }]);
+        expect(report.translations!.es.failed).toEqual([{ path: "(state)", error: "disk unreadable" }]);
+        expect(translator.requests).toEqual([]);
+        expect(store.writes).toEqual([]);
+    });
+
+    it("writes the state before any Locale file, and writes no Locale file when the state cannot be written", async () => {
+        const store = failing(repo(), { write: SYNC_STATE_PATH });
+        const { report } = await sync({ store, locales: ["es"] });
+
+        expect(report.translations!.es.failed).toEqual([{ path: "(state)", error: "disk full" }]);
+        expect(store.writes).toEqual([]);
+        expect(fileOf(store, "es")).toBeNull();
+    });
+
+    it("keeps a Stale translation Stale when its Locale file then fails to write (the state never claims a hash for text that was not written)", async () => {
+        const store = failing(repo({ "/dictionary/pt-BR.ts": ptFile(), [SYNC_STATE_PATH]: JSON.stringify(ptState()) }), { write: "/dictionary/pt-BR.ts" });
+        const changed = { Nav: { Home: "Home", About: "About us" }, Title: "Title" };
+
+        const { report } = await sync({ store, source: changed as never, regenerateStale: true });
+
+        expect(report.translations!["pt-BR"].failed).toEqual([{ path: "(file)", error: "disk full" }]);
+        expect(stateOf(store)["pt-BR"]["Nav.About"]).toBe(h("About"));
+        expect(parseDictionaryFile(fileOf(store, "pt-BR")!).tree).toEqual(ptBR);
+    });
+
+    it("keeps a regenerated entry Stale when only the final state update fails, and says so", async () => {
+        const store = failing(repo({ "/dictionary/pt-BR.ts": ptFile(), [SYNC_STATE_PATH]: JSON.stringify(ptState()) }), { write: SYNC_STATE_PATH });
+        const changed = { Nav: { Home: "Home", About: "About us" }, Title: "Title" };
+
+        // Nothing but the regenerated hash would change, so the first (pre-files) write is skipped and the second fails.
+        const { report } = await sync({ store, source: changed as never, regenerateStale: true });
+
+        expect(report.translations!["pt-BR"].failed.map((f) => f.path)).toContain("(state)");
+        expect(stateOf(store)["pt-BR"]["Nav.About"]).toBe(h("About"));
+    });
+});

@@ -152,6 +152,20 @@ describe("the LibreTranslate Translator", () => {
         );
     });
 
+    it("never puts the user:password of a base URL in an error message", async () => {
+        for (const url of ["http://user:s3cret@lt.local:5000/", "http://user:s3cret@[bad"]) {
+            const down = fakeFetch(new TypeError("fetch failed: http://user:s3cret@lt.local:5000/translate"));
+            const error = await createLibreTranslateTranslator({ url, fetch: down.fetch }).translate("a", "es").then(() => null, (e: Error) => e);
+            expect(error?.message).toMatch(/Cannot reach LibreTranslate/);
+            expect(error?.message).not.toContain("s3cret");
+            expect(error?.message).not.toContain("user:");
+        }
+        const down = fakeFetch(new TypeError("x"));
+        await expect(createLibreTranslateTranslator({ url: "http://user:s3cret@lt.local:5000/", fetch: down.fetch }).translate("a", "es")).rejects.toThrow(
+            "Cannot reach LibreTranslate at http://lt.local:5000;",
+        );
+    });
+
     it("rejects an answer with no translatedText", async () => {
         const { fetch } = fakeFetch(json({}));
         await expect(createLibreTranslateTranslator({ url: "http://x", fetch }).translate("a", "es")).rejects.toThrow(/translatedText/);

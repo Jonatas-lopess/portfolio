@@ -1,6 +1,8 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { locales } from "@/lib/locale";
-import { cvPath, profileLinkAnchorProps, profileLinkHref, profileLinks } from "./profile-links";
+import { defaultLocale, locales } from "@/lib/locale";
+import { cvLocales, cvPath, profileLinkAnchorProps, profileLinkHref, profileLinks } from "./profile-links";
 
 describe("profileLinks", () => {
     it("has unique ids", () => {
@@ -35,5 +37,25 @@ describe("cvPath", () => {
     it("downloads under a readable name per Locale", () => {
         const cv = profileLinks.find((l) => l.id === "cv")!;
         expect(profileLinkAnchorProps(cv, "pt-BR")).toEqual({ download: "Jonatas-Lopes-CV-pt-BR.pdf" });
+    });
+
+    it("names the download after the Locale whose CV file is served, not the one asked for", () => {
+        const cv = profileLinks.find((l) => l.id === "cv")!;
+        const unlisted = "xx" as never;
+        expect(profileLinkHref(cv, unlisted)).toBe("/cv/en.pdf");
+        expect(profileLinkAnchorProps(cv, unlisted)).toEqual({ download: "Jonatas-Lopes-CV-en.pdf" });
+    });
+});
+
+describe("cvLocales", () => {
+    it("lists only known Locales, each with its CV file on disk", () => {
+        for (const locale of cvLocales) {
+            expect(locales).toContain(locale);
+            expect(existsSync(path.join(process.cwd(), "public", cvPath(locale)))).toBe(true);
+        }
+    });
+
+    it("includes the default Locale, which every other Locale falls back to", () => {
+        expect(cvLocales).toContain(defaultLocale);
     });
 });

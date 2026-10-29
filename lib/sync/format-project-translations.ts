@@ -16,8 +16,27 @@ export function formatProjectTranslationsReport(
     let failures = 0;
     const list = (items: ProjectTranslationRef[]) => items.map(label).join(", ") || "-";
 
+    const pruned = () =>
+        report.pruned.length
+            ? [`  pruned (removed from projects.translations.json because the repo is not on the Allowlist; see the diff): ${report.pruned.join(", ")}`]
+            : [];
+
+    const reportFailures = () => {
+        const byError = new Map<string, string[]>();
+        for (const failure of report.failed) {
+            const error = redact(failure.error);
+            byError.set(error, [...(byError.get(error) ?? []), label(failure)]);
+        }
+        byError.forEach((entries, error) => {
+            failures += entries.length;
+            lines.push(`  FAILED ${entries.length} entr${entries.length === 1 ? "y" : "ies"} (${entries.join(", ")}): ${error}`);
+        });
+        if (report.failed.length) lines.push("  nothing was translated or written");
+    };
+
     if (projectCount === 0) {
-        lines.push("  the Allowlist is empty (projects.allowlist.ts): nothing to translate");
+        lines.push("  the Allowlist is empty (projects.allowlist.ts): nothing to translate", ...pruned());
+        reportFailures();
         return { lines, failures };
     }
 
@@ -38,20 +57,9 @@ export function formatProjectTranslationsReport(
     if (report.skipped.length) {
         lines.push(`  skipped (no Marked block in the README, so nothing to translate): ${report.skipped.join(", ")}`);
     }
-    if (report.orphaned.length) {
-        lines.push(`  note: projects.translations.json has entries for repos that are not on the Allowlist (left alone; delete them if unwanted): ${report.orphaned.join(", ")}`);
-    }
+    lines.push(...pruned());
 
-    const byError = new Map<string, string[]>();
-    for (const failure of report.failed) {
-        const error = redact(failure.error);
-        byError.set(error, [...(byError.get(error) ?? []), label(failure)]);
-    }
-    byError.forEach((entries, error) => {
-        failures += entries.length;
-        lines.push(`  FAILED ${entries.length} entr${entries.length === 1 ? "y" : "ies"} (${entries.join(", ")}): ${error}`);
-    });
-    if (report.failed.length) lines.push("  nothing was translated or written");
+    reportFailures();
 
     return { lines, failures };
 }

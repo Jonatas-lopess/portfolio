@@ -271,14 +271,45 @@ describe("Hidden repos in Project summary Sync", () => {
         expect(Object.keys(fileOf(store)!)).toEqual(["alpha"]);
     });
 
-    it("keep an old stored entry untouched but it is reported as orphaned, so the owner can delete it", async () => {
-        const leftover = { secret: { "pt-BR": { text: "Segredo.", sourceHash: h("x") } } };
-        const store = storeWith(leftover);
+    it("are pruned from the stored file, name included, and reported so the owner sees it in the diff", async () => {
+        const kept = { alpha: { "pt-BR": { text: "Texto.", sourceHash: h("Alpha.") } } };
+        const store = storeWith({ ...kept, secret: { "pt-BR": { text: "Segredo.", sourceHash: h("x") } } });
         const { report, translator } = await sync({ store, readmes: fakeReadmes({ alpha: readme("Alpha.") }) });
 
-        expect(report.orphaned).toEqual(["secret"]);
-        expect(translator.requests.map((r) => r.text)).toEqual(["Alpha."]);
-        expect(fileOf(store)!.secret).toEqual(leftover.secret);
+        expect(report.pruned).toEqual(["secret"]);
+        expect(translator.requests).toEqual([]);
+        expect(fileOf(store)).toEqual(kept);
+        expect(dec(store.files.get(PROJECT_TRANSLATIONS_PATH))).not.toContain("secret");
+    });
+
+    it("are pruned even when the Allowlist is now empty", async () => {
+        const store = storeWith({ secret: { "pt-BR": { text: "Segredo.", sourceHash: h("x") } } });
+        const { report } = await sync({ store, readmes: fakeReadmes({}), allowlist: [] });
+
+        expect(report.pruned).toEqual(["secret"]);
+        expect(fileOf(store)).toEqual({});
+    });
+
+    it("are not pruned, nor anything else written, when the run fails", async () => {
+        const store = storeWith({ secret: { "pt-BR": { text: "Segredo.", sourceHash: h("x") } } });
+        const before = dec(store.files.get(PROJECT_TRANSLATIONS_PATH));
+        const { report } = await sync({ store, readmes: fakeReadmes({ alpha: new Error("boom") }) });
+
+        expect(report.failed).toHaveLength(1);
+        expect(report.pruned).toEqual([]);
+        expect(store.writes).toEqual([]);
+        expect(dec(store.files.get(PROJECT_TRANSLATIONS_PATH))).toBe(before);
+    });
+
+    it("are not reported as pruned when the write fails", async () => {
+        const store = storeWith({ secret: { "pt-BR": { text: "Segredo.", sourceHash: h("x") } } });
+        store.write = async () => {
+            throw new Error("disk full");
+        };
+        const { report } = await sync({ store, readmes: fakeReadmes({ alpha: readme("Alpha.") }) });
+
+        expect(report.failed).toEqual([{ repo: "(file)", error: "disk full" }]);
+        expect(report.pruned).toEqual([]);
     });
 });
 
@@ -361,7 +392,7 @@ describe("an empty Allowlist", () => {
         expect(readmes.asked).toEqual([]);
         expect(translator.requests).toEqual([]);
         expect(store.writes).toEqual([]);
-        expect(report).toEqual({ generated: [], regenerated: [], stale: [], unchanged: [], skipped: [], orphaned: [], failed: [] });
+        expect(report).toEqual({ generated: [], regenerated: [], stale: [], unchanged: [], skipped: [], pruned: [], failed: [] });
     });
 });
 

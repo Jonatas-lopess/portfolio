@@ -7,10 +7,14 @@ import { createFileStore } from "@/lib/sync/file-store";
 import { formatProjectTranslationsReport } from "@/lib/sync/format-project-translations";
 import { formatTranslationsReport } from "@/lib/sync/format-translations";
 import { createGitHubReadmes } from "@/lib/sync/github-readmes";
+import { createRedact } from "@/lib/sync/redact";
 import { createGitHubScreenshots, SCREENSHOT_REPO_PATH } from "@/lib/sync/github-screenshots";
 import { createTranslator, TranslatorConfigError } from "@/lib/translator";
 
 const USAGE = "Usage: pnpm sync [--regenerate-stale]";
+
+// Module level, so the top-level crash handler redacts too: an upstream error message can carry a secret.
+const redact = createRedact([process.env.GITHUB_TOKEN, process.env.GEMINI_API_KEY, process.env.LIBRETRANSLATE_API_KEY]);
 
 /**
  * `pnpm sync`: the owner-run Sync job. Copies Screenshots and generates missing
@@ -26,8 +30,6 @@ async function main(argv: string[]): Promise<number> {
     const regenerateStale = argv.includes("--regenerate-stale");
 
     const token = process.env.GITHUB_TOKEN;
-    const secrets = [token, process.env.GEMINI_API_KEY, process.env.LIBRETRANSLATE_API_KEY].filter((s): s is string => !!s);
-    const redact = (text: string) => secrets.reduce((out, secret) => out.split(secret).join("***"), text);
 
     if (allowlist.length > 0 && !token) {
         console.error("GITHUB_TOKEN is not set. Use the same read-only token as the site.");
@@ -104,7 +106,7 @@ main(process.argv.slice(2)).then(
         process.exitCode = code;
     },
     (error) => {
-        console.error(`Sync crashed: ${error instanceof Error ? error.message : String(error)}`);
+        console.error(`Sync crashed: ${redact(error instanceof Error ? error.message : String(error))}`);
         process.exitCode = 1;
     },
 );

@@ -51,21 +51,21 @@ type Pending = { repo: string; locale: string; text: string; hash: string; regen
  * block and each target Locale: no Translation means translate and record the
  * hash of the Source text; a Translation whose hash matches is left alone; one
  * whose hash differs (or is missing) is Stale, reported and left alone, and
- * replaced only with `regenerateStale`. All or nothing: any failure means the
- * file is not touched. Hidden repos are never read. See ADR 0002.
+ * replaced only with `regenerateStale`. Entries for repos no longer on the
+ * Allowlist are pruned. All or nothing: any failure means the file is not
+ * touched, pruning included. Hidden repos are never read. See ADR 0002.
  */
 export async function syncProjectTranslations(deps: ProjectTranslationsDeps, allowlist: AllowlistEntry[]): Promise<ProjectTranslationsReport> {
-    const report: ProjectTranslationsReport = { generated: [], regenerated: [], stale: [], unchanged: [], skipped: [], orphaned: [], failed: [] };
+    const report: ProjectTranslationsReport = { generated: [], regenerated: [], stale: [], unchanged: [], skipped: [], pruned: [], failed: [] };
     const repos = dedupeAllowlist(allowlist).map((entry) => entry.repo);
-    if (repos.length === 0) return report;
 
     const locales = Array.from(new Set(deps.locales)).filter((locale) => locale !== deps.sourceLocale);
-    for (const locale of locales) {
+    for (const locale of repos.length === 0 ? [] : locales) {
         if (!LOCALE_TAG.test(locale)) {
             report.failed.push({ repo: "(locale)", locale, error: `"${locale}" is not a valid Locale tag (expected something like "es" or "pt-BR")` });
         }
     }
-    if (report.failed.length > 0 || locales.length === 0) return report;
+    if (report.failed.length > 0 || (repos.length > 0 && locales.length === 0)) return report;
 
     let file: File;
     let existingText: string | null;
@@ -78,7 +78,8 @@ export async function syncProjectTranslations(deps: ProjectTranslationsDeps, all
         return report;
     }
 
-    report.orphaned = Object.keys(file).filter((repo) => !repos.includes(repo)).sort();
+    // Entries for repos that left the Allowlist are dropped from the file (a Hidden repo's name must not stay in committed data).
+    const orphans = Object.keys(file).filter((repo) => !repos.includes(repo)).sort();
 
     // Phase 1: read and classify. Nothing is sent to the Translator until every README was read.
     const pending: Pending[] = [];
@@ -113,7 +114,11 @@ export async function syncProjectTranslations(deps: ProjectTranslationsDeps, all
     if (report.failed.length > 0) return report;
 
     // Phase 2: translate. Nothing is recorded unless every call worked.
-    const next: File = Object.fromEntries(Object.entries(file).map(([repo, byLocale]) => [repo, { ...byLocale }]));
+    const next: File = Object.fromEntries(
+        Object.entries(file)
+            .filter(([repo]) => !orphans.includes(repo))
+            .map(([repo, byLocale]) => [repo, { ...byLocale }]),
+    );
     for (const item of pending) {
         try {
             const text = (await deps.translator.translate(item.text, item.locale)).trim();
@@ -131,14 +136,16 @@ export async function syncProjectTranslations(deps: ProjectTranslationsDeps, all
     }
 
     const rendered = renderFile(next);
-    if (pending.length > 0 && rendered !== existingText) {
+    if ((pending.length > 0 || orphans.length > 0) && rendered !== existingText) {
         try {
             await deps.store.write(PROJECT_TRANSLATIONS_PATH, new TextEncoder().encode(rendered));
         } catch (error) {
             report.failed.push({ repo: "(file)", error: message(error) });
             report.generated = [];
             report.regenerated = [];
+            return report;
         }
     }
+    report.pruned = orphans;
     return report;
 }

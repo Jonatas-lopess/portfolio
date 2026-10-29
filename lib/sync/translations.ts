@@ -168,37 +168,83 @@ async function registerLocale(locale: string, store: FileStore, report: Dictiona
 export async function syncTranslations(deps: TranslationsDeps): Promise<TranslationsReport> {
     const result: TranslationsReport = {};
     const locales = Array.from(new Set(deps.locales)).filter((locale) => locale !== deps.sourceLocale);
+    const failState = (error: unknown): DictionaryLocaleReport => ({ ...emptyReport(), failed: [{ path: "(state)", error: message(error) }] });
 
     let state: SyncState;
-    const stateText = decode(await deps.store.read(SYNC_STATE_PATH));
     try {
-        state = parseState(stateText);
+        state = parseState(decode(await deps.store.read(SYNC_STATE_PATH)));
     } catch (error) {
-        for (const locale of locales) result[locale] = { ...emptyReport(), failed: [{ path: "(state)", error: message(error) }] };
+        for (const locale of locales) result[locale] = failState(error);
         return result;
     }
 
-    const nextState: SyncState = { ...state };
+    // Plan every Locale first; planning writes nothing.
+    const planned: Record<string, LocaleResult> = {};
     for (const locale of locales) {
-        let planned: LocaleResult;
         try {
-            planned = await planLocale(locale, deps, state[locale] ?? {});
+            planned[locale] = await planLocale(locale, deps, state[locale] ?? {});
         } catch (error) {
-            planned = { report: { ...emptyReport(), failed: [{ path: "(file)", error: message(error) }] } };
+            planned[locale] = { report: { ...emptyReport(), failed: [{ path: "(file)", error: message(error) }] } };
         }
-        result[locale] = planned.report;
-        if (planned.report.failed.length > 0 || !planned.hashes) continue;
+        result[locale] = planned[locale].report;
+    }
+    const writable = locales.filter((locale) => planned[locale].report.failed.length === 0 && planned[locale].hashes);
 
+    // Write order: state, then Locale files, then (only if something was regenerated) state again.
+    // A hash in the state without the text it describes is harmless: an entry with no Translation
+    // is translated again and its hash replaced. The reverse is not: a Translation with no hash is
+    // baselined as up to date, and a regenerated entry with its new hash but its old text would
+    // look fresh. So the first write records every hash that is safe before the files exist (new
+    // entries, baselines, unchanged) and keeps the old hash of regenerated entries, and the second
+    // write bumps those only after their Locale file was written. A failure in either leaves
+    // entries Stale or untranslated, never wrongly fresh.
+    const beforeFiles: SyncState = { ...state };
+    for (const locale of writable) {
+        const hashes = { ...planned[locale].hashes! };
+        for (const path of planned[locale].report.regenerated) {
+            const old = state[locale]?.[path];
+            if (old === undefined) delete hashes[path];
+            else hashes[path] = old;
+        }
+        beforeFiles[locale] = hashes;
+    }
+    const stateError = await persistState(deps.store, state, beforeFiles);
+    if (stateError !== null) {
+        // Same shape as an unreadable state: nothing of these Locales was written.
+        for (const locale of writable) result[locale] = failState(stateError);
+        return result;
+    }
+
+    const afterFiles: SyncState = { ...beforeFiles };
+    const regeneratedLocales: string[] = [];
+    for (const locale of writable) {
+        const { report, file, hashes } = planned[locale];
         try {
-            if (planned.file !== undefined) await deps.store.write(dictionaryPath(locale), encode(planned.file));
-            await registerLocale(locale, deps.store, planned.report);
-            nextState[locale] = planned.hashes;
+            if (file !== undefined) await deps.store.write(dictionaryPath(locale), encode(file));
+            await registerLocale(locale, deps.store, report);
+            afterFiles[locale] = hashes!;
+            if (report.regenerated.length > 0) regeneratedLocales.push(locale);
         } catch (error) {
-            planned.report.failed.push({ path: "(file)", error: message(error) });
+            report.failed.push({ path: "(file)", error: message(error) });
         }
     }
 
-    const rendered = renderState(nextState);
-    if (rendered !== renderState(state) && Object.keys(nextState).length > 0) await deps.store.write(SYNC_STATE_PATH, encode(rendered));
+    const finalError = regeneratedLocales.length > 0 ? await persistState(deps.store, beforeFiles, afterFiles) : null;
+    if (finalError !== null) {
+        // The files are written; only the new hashes are not, so these entries stay Stale until the next run.
+        for (const locale of regeneratedLocales) result[locale].failed.push({ path: "(state)", error: message(finalError) });
+    }
     return result;
+}
+
+/** Writes the state when it changed. Resolves the error instead of throwing; null when written or unchanged. */
+async function persistState(store: FileStore, from: SyncState, to: SyncState): Promise<unknown> {
+    const rendered = renderState(to);
+    if (rendered === renderState(from) || Object.keys(to).length === 0) return null;
+    try {
+        await store.write(SYNC_STATE_PATH, encode(rendered));
+        return null;
+    } catch (error) {
+        return error ?? new Error("could not write the state file");
+    }
 }

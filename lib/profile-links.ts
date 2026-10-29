@@ -5,11 +5,16 @@ import { defaultLocale, type Locale } from "@/lib/locale";
  * Locales that have their own CV file at `public/cv/<locale>.pdf`. A Locale not
  * listed here gets the default Locale's CV, so adding a Locale needs no CV.
  */
-const cvLocales: readonly Locale[] = ["en", "pt-BR"];
+export const cvLocales: readonly Locale[] = ["en", "pt-BR"];
+
+/** The Locale whose CV file serves `locale`: itself when it has one, else the default Locale. */
+function cvLocale(locale: Locale): Locale {
+    return cvLocales.includes(locale) ? locale : defaultLocale;
+}
 
 /** Public path of the CV for a Locale, falling back to the default Locale's CV. */
 export function cvPath(locale: Locale): string {
-    return `/cv/${cvLocales.includes(locale) ? locale : defaultLocale}.pdf`;
+    return `/cv/${cvLocale(locale)}.pdf`;
 }
 
 /**
@@ -42,7 +47,7 @@ export function profileLinkHref(link: ProfileLink, locale: Locale): string {
     return "href" in link ? link.href : cvPath(locale);
 }
 
-/** Anchor attributes for the link: external links open in a new tab; the CV is a same-site file that downloads under a readable name. */
+/** Anchor attributes for the link: external links open in a new tab; the CV is a same-site file that downloads under a readable name, in the Locale of the file actually served. */
 export function profileLinkAnchorProps(link: ProfileLink, locale: Locale): { target: "_blank"; rel: "noopener" } | { download: string } {
-    return link.external ? { target: "_blank", rel: "noopener" } : { download: `Jonatas-Lopes-CV-${locale}.pdf` };
+    return link.external ? { target: "_blank", rel: "noopener" } : { download: `Jonatas-Lopes-CV-${cvLocale(locale)}.pdf` };
 }

@@ -10,6 +10,18 @@ export type LibreTranslateOptions = {
     fetch?: typeof globalThis.fetch;
 };
 
+/** The base URL without `user:password@`, safe to show in a message. */
+function withoutUserinfo(url: string): string {
+    try {
+        const parsed = new URL(url);
+        parsed.username = "";
+        parsed.password = "";
+        return parsed.href.replace(/\/+$/, "");
+    } catch {
+        return url.replace(/^([a-z][a-z0-9+.-]*:\/\/)[^/?#]*@/i, "$1");
+    }
+}
+
 /**
  * LibreTranslate's `POST /translate`. Meant for a local server, so text that
  * should not leave the owner's machine never does. LibreTranslate names a
@@ -34,7 +46,7 @@ export function createLibreTranslateTranslator(options: LibreTranslateOptions = 
                     }),
                 });
             } catch {
-                throw new Error(`Cannot reach LibreTranslate at ${base}; is the server running (LIBRETRANSLATE_URL)?`);
+                throw new Error(`Cannot reach LibreTranslate at ${withoutUserinfo(base)}; is the server running (LIBRETRANSLATE_URL)?`);
             }
             const body: any = await response.json().catch(() => undefined);
             if (!response.ok) {

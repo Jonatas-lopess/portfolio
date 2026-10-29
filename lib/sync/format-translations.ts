@@ -35,7 +35,11 @@ export function formatTranslationsReport(report: TranslationsReport, redact: (te
             failures += paths.length;
             lines.push(`  FAILED ${paths.length} entr${paths.length === 1 ? "y" : "ies"} (${paths.join(", ")}): ${error}`);
         });
-        if (r.failed.length) lines.push("  nothing of this Locale was written");
+        if (r.failed.length) {
+            // A (state) failure after a regeneration means the Locale file is written and only the new hashes are not.
+            const hashesOnly = r.regenerated.length > 0 && r.failed.every((f) => f.path === "(state)");
+            lines.push(hashesOnly ? "  the Locale file was written, but the new hashes were not, so these entries stay Stale until the next run" : "  nothing of this Locale was written");
+        }
     }
     return { lines, failures };
 }

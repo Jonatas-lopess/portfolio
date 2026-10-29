@@ -84,8 +84,11 @@ export type ProjectTranslationsReport = {
     unchanged: ProjectTranslationRef[];
     /** Projects whose README has no usable Marked block: nothing to translate. Not an error. */
     skipped: string[];
-    /** Repos in the stored file that are not on the Allowlist. Left alone; the owner may delete them. */
-    orphaned: string[];
+    /**
+     * Repos that were in the stored file but are not on the Allowlist any more: removed from
+     * the file, so a Hidden repo's name does not stay in committed data. Empty when the run failed (nothing is written then).
+     */
+    pruned: string[];
     /**
      * Things that could not be done. When this is not empty nothing was translated or written.
      * `repo` is `(file)` for the stored file as a whole, `(locale)` for a bad Locale tag.

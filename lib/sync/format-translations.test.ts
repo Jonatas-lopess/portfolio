@@ -24,4 +24,10 @@ describe("the Translations report as text", () => {
         expect(lines.join("\n")).toContain("--regenerate-stale");
         expect(lines.join("\n")).toContain('import { es } from "./es";');
     });
+
+    it("says the file was written when only the final state update failed", () => {
+        const { lines } = formatTranslationsReport({ es: { ...base, regenerated: ["A"], failed: [{ path: "(state)", error: "disk full" }] } });
+        expect(lines.join("\n")).toContain("the new hashes were not");
+        expect(lines.join("\n")).not.toContain("nothing of this Locale was written");
+    });
 });
