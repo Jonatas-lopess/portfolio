@@ -29,4 +29,9 @@ export const githubOwner = "Jonatas-lopess";
  * The site reads each repo with the server-only GITHUB_TOKEN, which must have
  * read access (metadata and contents) to every repo listed here.
  */
-export const allowlist: AllowlistEntry[] = [];
+export const allowlist: AllowlistEntry[] = [
+    { repo: "erp_project", title: "SIGA Erp" },
+    { repo: "ai_harness", visibility: "full" },
+    { repo: "legal_manager", title: "Legal Manager" },
+    { repo: "projeto_ebd", title: "Ebd App" },
+];
