@@ -23,6 +23,14 @@ describe("profileLinks", () => {
     });
 });
 
+describe("email link", () => {
+    it("is a mailto link with no target or download", () => {
+        const email = profileLinks.find((l) => l.id === "email")!;
+        expect(profileLinkHref(email, "en")).toMatch(/^mailto:.+@.+/);
+        expect(profileLinkAnchorProps(email, "en")).toEqual({});
+    });
+});
+
 describe("cvPath", () => {
     it("gives each Locale its own CV file", () => {
         expect(new Set(locales.map(cvPath)).size).toBe(locales.length);

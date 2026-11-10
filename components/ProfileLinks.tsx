@@ -1,5 +1,6 @@
 import type { ComponentType, SVGProps } from "react";
 import Download from "@/components/svg/Download";
+import Email from "@/components/svg/Email";
 import Github from "@/components/svg/Github";
 import Linkedin from "@/components/svg/Linkedin";
 import { getDictionary, type Locale } from "@/lib/locale";
@@ -10,6 +11,7 @@ const ICON_SIZE = 36;
 const icons: Record<ProfileLinkId, ComponentType<SVGProps<SVGSVGElement>>> = {
     linkedin: Linkedin,
     github: Github,
+    email: Email,
     cv: Download,
 };
 

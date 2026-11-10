@@ -30,6 +30,7 @@ export function cvPath(locale: Locale): string {
 export const profileLinks = [
     { id: "linkedin", href: "https://www.linkedin.com/in/jonatas-lopes-b6629a211", name: "LinkedIn", external: true },
     { id: "github", href: "https://github.com/Jonatas-lopess", name: "GitHub", external: true },
+    { id: "email", href: "mailto:jonataslopes.011@gmail.com", name: "Email", external: false },
     { id: "cv", external: false },
 ] as const;
 
@@ -47,7 +48,8 @@ export function profileLinkHref(link: ProfileLink, locale: Locale): string {
     return "href" in link ? link.href : cvPath(locale);
 }
 
-/** Anchor attributes for the link: external links open in a new tab; the CV is a same-site file that downloads under a readable name, in the Locale of the file actually served. */
-export function profileLinkAnchorProps(link: ProfileLink, locale: Locale): { target: "_blank"; rel: "noopener" } | { download: string } {
+/** Anchor attributes for the link: external links open in a new tab; a `mailto:` link needs none; the CV is a same-site file that downloads under a readable name, in the Locale of the file actually served. */
+export function profileLinkAnchorProps(link: ProfileLink, locale: Locale): { target: "_blank"; rel: "noopener" } | { download: string } | Record<string, never> {
+    if ("href" in link && !link.external) return {};
     return link.external ? { target: "_blank", rel: "noopener" } : { download: `Jonatas-Lopes-CV-${cvLocale(locale)}.pdf` };
 }

@@ -1,5 +1,6 @@
 import ProfileLinks from "@/components/ProfileLinks";
-import { getDictionary, type Locale } from "@/lib/locale";
+import Link from "next/link";
+import { getDictionary, localePath, type Locale } from "@/lib/locale";
 
 export default async function Home({ params }: { params: Promise<{ lang: string }> }) {
   const locale = (await params).lang as Locale // middleware guarantees a valid Locale prefix
@@ -9,7 +10,16 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
     <div className="flex flex-1 flex-col justify-center text-center">
       <h3 className="animate-fade-up text-xl text-gray-500 dark:text-gray-300">{dictionary.Home.Subtitle}</h3>
       <h1 style={{ animationDelay: "100ms" }} className="animate-fade-up text-7xl dark:text-white font-semibold mb-7">Jonatas Lopes</h1>
-      <div className="animate-fade-up" style={{ animationDelay: "200ms" }}>
+      <p style={{ animationDelay: "200ms" }} className="animate-fade-up mx-auto mb-7 max-w-xl text-gray-600 dark:text-gray-300">{dictionary.Home.Intro}</p>
+      <div style={{ animationDelay: "300ms" }} className="animate-fade-up mb-7">
+        <Link
+          href={localePath(locale, "/projects")}
+          className="inline-block border border-current px-6 py-2 font-mono text-sm uppercase tracking-wide dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+        >
+          {dictionary.Home.ViewProjects}
+        </Link>
+      </div>
+      <div className="animate-fade-up" style={{ animationDelay: "400ms" }}>
         <ProfileLinks variant="icons" locale={locale} />
       </div>
     </div>
