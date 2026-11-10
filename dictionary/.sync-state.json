@@ -1,6 +1,7 @@
 {
   "pt-BR": {
     "About.CVDownload": "1a2d45a28b06a8a4f70d9c12b593774176588211096769ce580ca723304f9a21",
+    "About.EducationHeading": "512ab3c6b9869577bd4474c56b88f9e3f1c40c54d18e8e5a2329821254d362d2",
     "About.ExperienceHeading": "8eab0f09df013b1bd69655991bb824cfa822d383b482905789153d4df8bfda78",
     "About.Job1Company": "883d03e546aeb6de27aa3115080acbb60a9852feeaf33f43ed5d547186d939b0",
     "About.Job1Period": "6599993b8119b6ca8dcf3eaa7411bed10600529ea285e2a8e699c5bec83b85f0",
@@ -20,9 +21,11 @@
     "About.Job4Summary": "4fc998e5c32520a68be4ef2b42301f3665e5876ffcf045b83f714490f37ab5df",
     "About.Languages": "9e431d3516cdfe107822c2dbad78553d7ecc3b8f32e501436382896dda355cd4",
     "About.LanguagesLabel": "318655cea4bd2096fbfad433d7c019bac40750d1a456fc34d366df41fcc77197",
-    "About.LinksHeading": "9024c197d84940e47ff6aa631b7711c4cbff4e7fb2fe1a574a3592b662983a0d",
     "About.Location": "f0b292453a704dcfdde5e00123a3b8de0c93bb20a383caf6646035932ab62ccb",
     "About.LocationLabel": "15b61974b2707a7b3d4201385e0f01f4ff5eb1f17c5639d98788ee5add2025cd",
+    "About.StudyInstitution": "fe4374bba10580867b9000ec342521b5672172c68f160612bdf102ca765b8374",
+    "About.StudyPeriod": "04dc04b643d9fb10583089d5d32c0bdf07268ea7fa8778f42424b914b6cb71a8",
+    "About.StudyRole": "e724c78349403662ecb3af821fc98e53efbd649cffd3ccdd12f62e15cea5759b",
     "About.Text": "4fc591ab9be3715ba9154129e76a09cc6eb24621809f8a8390a5b070cda7c6a8",
     "About.Title": "1359ec883b211e729ff91608fc944ffbb03ac804d3f951425af0cc33b3e187cc",
     "Home.Intro": "e1f1a57b650f4793376aae3fe3498e41580a63a9271455fadeb92ca7dda33f46",

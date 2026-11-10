@@ -35,7 +35,7 @@ export default function ProfileLinks({ variant, locale }: { variant: "icons" | "
         }
 
         return (
-            <div key={link.id} className="w-min">
+            <div key={link.id}>
                 <a href={href} {...target} className={"flex items-center space-x-2 dark:text-white" + (link.external ? "" : " w-max")}>{icon}<span>{name}</span></a>
             </div>
         );
@@ -43,5 +43,5 @@ export default function ProfileLinks({ variant, locale }: { variant: "icons" | "
 
     return variant === "icons"
         ? <div className="flex space-x-2 justify-center">{links}</div>
-        : <div className=" flex flex-col space-y-4">{links}</div>;
+        : <div className="flex flex-wrap gap-x-8 gap-y-4">{links}</div>;
 }
