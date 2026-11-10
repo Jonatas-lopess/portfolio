@@ -38,13 +38,14 @@ export default function ProjectCover({ title, screenshot, label, position, total
     if (screenshot) {
         return (
             <figure>
-                <div className={frame}>
+                <div className={`${frame} !aspect-[16/10]`}>
                     <Image
                         alt=""
                         src={screenshot}
                         fill
                         sizes="(min-width: 768px) 60vw, 100vw"
-                        className="object-cover"
+                        priority
+                        className="object-contain"
                     />
                 </div>
                 {caption}
