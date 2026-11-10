@@ -20,7 +20,8 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
               height={4482}
               sizes="160px"
               priority
-              className="h-40 w-40 rounded-full object-cover object-[50%_43%]"
+              draggable={false}
+              className="pointer-events-none h-40 w-40 select-none rounded-full object-cover object-[50%_43%] [-webkit-user-drag:none]"
             />
           </div>
         </div>
