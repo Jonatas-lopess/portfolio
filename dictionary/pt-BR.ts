@@ -14,8 +14,9 @@ export const ptBR: DictionaryEntry = {
     },
     Home: {
         Subtitle: "Desenvolvedor Full Stack",
-        Intro: "Crio software web, mobile e desktop, do banco de dados à interface.",
-        ViewProjects: "Ver projetos"
+        Intro: "Crio software web, mobile e desktop, do banco de dados à interface, e assistentes de IA sobre sistemas empresariais.",
+        ViewProjects: "Ver projetos",
+        PhotoAlt: "Retrato de Jonatas Lopes"
     },
     About: {
         Title: "Sobre mim",

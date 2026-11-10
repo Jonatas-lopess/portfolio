@@ -37,7 +37,7 @@ export default async function RootLayout({
   const locale = lang
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body className={inter.className + " " + mono.variable + " bg-gradient-to-b dark:from-[#434343] dark:to-[#000000] from-[#ffffff] to-[#fff1e1]"}>
         <main className="mx-auto flex min-h-screen w-full max-w-[1400px] flex-col px-5 md:px-10 lg:px-16">
           <Theme>

@@ -18,8 +18,9 @@ export const en = {
     },
     Home: {
         Subtitle: "Full Stack Developer",
-        Intro: "I build web, mobile and desktop software, from the database to the interface.",
-        ViewProjects: "View projects"
+        Intro: "I build web, mobile and desktop software, from the database to the interface, and AI assistants on top of business systems.",
+        ViewProjects: "View projects",
+        PhotoAlt: "Portrait of Jonatas Lopes"
     },
     About: {
         Title: "About me",
