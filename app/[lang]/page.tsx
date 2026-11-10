@@ -7,9 +7,11 @@ export default async function Home({ params }: { params: Promise<{ lang: string 
 
   return (
     <div className="flex flex-1 flex-col justify-center text-center">
-      <h3 className="text-xl text-gray-500 dark:text-gray-300">{dictionary.Home.Subtitle}</h3>
-      <h1 className="text-7xl dark:text-white font-semibold mb-7">Jonatas Lopes</h1>
-      <ProfileLinks variant="icons" locale={locale} />
+      <h3 className="animate-fade-up text-xl text-gray-500 dark:text-gray-300">{dictionary.Home.Subtitle}</h3>
+      <h1 style={{ animationDelay: "100ms" }} className="animate-fade-up text-7xl dark:text-white font-semibold mb-7">Jonatas Lopes</h1>
+      <div className="animate-fade-up" style={{ animationDelay: "200ms" }}>
+        <ProfileLinks variant="icons" locale={locale} />
+      </div>
     </div>
   )
 }

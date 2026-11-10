@@ -69,24 +69,28 @@ export default function ProjectIndex({ projects, locale, labels }: {
                     const { active: isActive, tagline } = rowState(p, active)
 
                     return (
-                        <li key={p.slug} className="border-b border-black/15 dark:border-white/15">
+                        <li
+                            key={p.slug}
+                            className="animate-fade-up border-b border-black/15 dark:border-white/15"
+                            style={{ animationDelay: `${Math.min(position, 8) * 70 + 100}ms` }}
+                        >
                             <Link
                                 href={localePath(locale, `/projects/${encodeURIComponent(p.slug)}`)}
                                 onMouseEnter={() => setActive(p.slug)}
                                 onMouseLeave={() => setActive((current) => deactivate(current, p.slug))}
                                 onFocus={() => setActive(p.slug)}
                                 onBlur={() => setActive((current) => deactivate(current, p.slug))}
-                                className="flex items-center gap-4 py-6 md:gap-0 md:py-10"
+                                className="flex items-center gap-4 py-6 transition-[padding] duration-300 ease-out md:gap-0 md:py-10"
                             >
                                 <span className="w-8 shrink-0 font-mono text-xs text-gray-600 dark:text-gray-400 md:w-28 md:text-sm">{indexLabel(position)}</span>
                                 <span className="min-w-0 flex-1">
-                                    <span className="block break-words text-3xl tracking-tight md:text-6xl">{p.title}</span>
-                                    {tagline && <span className="mt-3 block text-sm text-gray-600 dark:text-gray-400 md:mt-5 md:text-lg">{tagline}</span>}
+                                    <span className={'block break-words text-3xl tracking-tight transition-transform duration-300 ease-out md:text-6xl ' + (isActive ? 'md:translate-x-4' : '')}>{p.title}</span>
+                                    {tagline && <span className="animate-fade-up-sm mt-3 block text-sm text-gray-600 dark:text-gray-400 md:mt-5 md:text-lg">{tagline}</span>}
                                 </span>
                                 <span className="flex shrink-0 items-center gap-5">
-                                    {isActive && <span className="hidden text-sm text-gray-600 dark:text-gray-400 md:inline">{labels.ViewProject}</span>}
-                                    <span aria-hidden="true" className={'flex h-10 w-10 items-center justify-center rounded-full border transition-colors md:h-[72px] md:w-[72px] ' + (isActive
-                                        ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
+                                    {isActive && <span className="animate-fade-up-sm hidden text-sm text-gray-600 dark:text-gray-400 md:inline">{labels.ViewProject}</span>}
+                                    <span aria-hidden="true" className={'flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out md:h-[72px] md:w-[72px] ' + (isActive
+                                        ? 'scale-110 rotate-45 border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
                                         : 'border-black/25 dark:border-white/25')}>
                                         <ArrowUpRight />
                                     </span>
