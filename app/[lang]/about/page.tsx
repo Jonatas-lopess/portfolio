@@ -16,7 +16,7 @@ export default async function About({ params }: { params: Promise<{ lang: string
     const jobRows = ["md:row-start-2", "md:row-start-3", "md:row-start-4", "md:row-start-5"]
 
     return (
-        <div className="my-20">
+        <div className="my-8">
             <h1 className="text-5xl dark:text-white font-semibold mb-7">{about.Title}</h1>
             <p className="dark:text-white mb-5">{about.Text}</p>
             <dl className="dark:text-white mb-6 grid grid-cols-[auto_1fr] gap-x-6 gap-y-1">

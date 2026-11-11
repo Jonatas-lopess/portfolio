@@ -46,17 +46,17 @@ export default function ProjectIndex({ projects, locale, labels }: {
 
     return (
         <div className="flex flex-1 flex-col text-black dark:text-white">
-            <p className="mt-12 font-mono text-xs uppercase tracking-wide text-gray-600 dark:text-gray-400 md:mt-24 md:text-sm">{labels.Breadcrumb}</p>
+            <p className="mt-8 font-mono text-xs uppercase tracking-wide text-gray-600 dark:text-gray-400 md:mt-12 md:text-sm">{labels.Breadcrumb}</p>
 
             <div className="mt-4 flex flex-col gap-6 md:mt-6 md:flex-row md:items-end md:justify-between md:gap-10">
                 <div className="flex items-start gap-2 md:gap-4">
-                    <h1 className="text-6xl font-medium leading-none tracking-tight sm:text-8xl md:text-[10rem]">{labels.Title}</h1>
-                    <span className="font-mono text-base text-gray-600 dark:text-gray-400 md:mt-4 md:text-3xl">
+                    <h1 className="text-5xl font-semibold leading-none tracking-tight sm:text-6xl md:text-7xl">{labels.Title}</h1>
+                    <span className="font-mono text-base text-gray-600 dark:text-gray-400 md:mt-2 md:text-xl">
                         <span className="sr-only">{labels.CountLabel}: {projects.length}</span>
                         <span aria-hidden="true">({padNumber(projects.length)})</span>
                     </span>
                 </div>
-                <p className="max-w-xs text-base text-gray-600 dark:text-gray-400 md:mb-6 md:text-right md:text-xl">{labels.Intro}</p>
+                <p className="max-w-xs text-base text-gray-600 dark:text-gray-400 md:mb-3 md:text-right md:text-base">{labels.Intro}</p>
             </div>
 
             <div className="mt-12 flex items-center justify-between border-b border-black/15 pb-4 font-mono text-xs uppercase tracking-wide text-gray-600 dark:border-white/15 dark:text-gray-400 md:mt-20 md:text-sm">
@@ -80,16 +80,16 @@ export default function ProjectIndex({ projects, locale, labels }: {
                                 onMouseLeave={() => setActive((current) => deactivate(current, p.slug))}
                                 onFocus={() => setActive(p.slug)}
                                 onBlur={() => setActive((current) => deactivate(current, p.slug))}
-                                className="flex items-center gap-4 py-6 transition-[padding] duration-300 ease-out md:gap-0 md:py-10"
+                                className="flex items-center gap-4 py-6 transition-[padding] duration-300 ease-out md:gap-0 md:py-7"
                             >
                                 <span className="w-8 shrink-0 font-mono text-xs text-gray-600 dark:text-gray-400 md:w-28 md:text-sm">{indexLabel(position)}</span>
                                 <span className="min-w-0 flex-1">
-                                    <span className={'block break-words text-3xl tracking-tight transition-transform duration-300 ease-out md:text-6xl ' + (isActive ? 'md:translate-x-4' : '')}>{p.title}</span>
-                                    {tagline && <span className="animate-fade-up-sm mt-3 block text-sm text-gray-600 dark:text-gray-400 md:mt-5 md:text-lg">{tagline}</span>}
+                                    <span className={'block break-words text-2xl tracking-tight transition-transform duration-300 ease-out md:text-4xl ' + (isActive ? 'md:translate-x-4' : '')}>{p.title}</span>
+                                    {tagline && <span className="animate-fade-up-sm mt-3 block text-sm text-gray-600 dark:text-gray-400 md:mt-4 md:text-base">{tagline}</span>}
                                 </span>
                                 <span className="flex shrink-0 items-center gap-5">
                                     {isActive && <span className="animate-fade-up-sm hidden text-sm text-gray-600 dark:text-gray-400 md:inline">{labels.ViewProject}</span>}
-                                    <span aria-hidden="true" className={'flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out md:h-[72px] md:w-[72px] ' + (isActive
+                                    <span aria-hidden="true" className={'flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out md:h-14 md:w-14 ' + (isActive
                                         ? 'scale-110 rotate-45 border-black bg-black text-white dark:border-white dark:bg-white dark:text-black'
                                         : 'border-black/25 dark:border-white/25')}>
                                         <ArrowUpRight />
